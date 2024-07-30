@@ -7,6 +7,8 @@ app_description = "Pollution Stripes"
 app_email = "info@paralogic.io"
 app_license = "GNU General Public License (v3)"
 
+required_apps = ["aqp"]
+
 # Includes in <head>
 # ------------------
 
