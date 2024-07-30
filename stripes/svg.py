@@ -6,13 +6,17 @@ import drawsvg as dw
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_svg(from_date, to_date, air_monitor=None):
-	daily_averages = get_daily_average_readings(from_date, to_date, air_monitor=air_monitor)
-
-	frappe.response.filename = "test.svg"
-	frappe.response.filecontent = draw_stripes_svg(daily_averages, from_date, to_date)
+def get_stripes_svg_image(from_date, to_date, air_monitor=None):
+	frappe.response.filecontent = get_stripes_svg(from_date, to_date, air_monitor=air_monitor)
+	frappe.response.filename = "test.svg"  # Todo filename
 	frappe.response.type = "download"
 	frappe.response.display_content_as = "inline"
+
+
+@frappe.whitelist(allow_guest=True)
+def get_stripes_svg(from_date, to_date, air_monitor=None):
+	daily_averages = get_daily_average_readings(from_date, to_date, air_monitor=air_monitor)
+	return draw_stripes_svg(daily_averages, from_date, to_date)
 
 
 def draw_stripes_svg(daily_averages, from_date, to_date):
@@ -27,7 +31,7 @@ def draw_stripes_svg(daily_averages, from_date, to_date):
 	days = date_diff(to_date, from_date) + 1
 	stripe_width = svg_width / days
 
-	drawing = dw.Drawing(svg_width, height)
+	drawing = dw.Drawing(svg_width, height)  # Todo IDs
 	group = dw.Group(fill="#ffffff")
 	drawing.append(group)
 
