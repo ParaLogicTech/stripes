@@ -19,7 +19,7 @@ frappe.ui.form.on('Stripes Generator', {
 		frm.events.get_stripes_svg(frm);
 	},
 
-	air_monitor(frm) {
+	monitor_region(frm) {
 		frm.events.get_stripes_svg(frm);
 	},
 
@@ -35,7 +35,7 @@ frappe.ui.form.on('Stripes Generator', {
 			args: {
 				from_date: frm.doc.from_date,
 				to_date: frm.doc.to_date,
-				air_monitor: frm.doc.air_monitor,
+				monitor_region: frm.doc.monitor_region,
 			},
 			callback(r) {
 				let wrapper = $(frm.fields_dict.svg_display.wrapper);

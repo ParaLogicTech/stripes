@@ -1,25 +1,25 @@
 import frappe
 from frappe import _
 from frappe.utils import cint, date_diff, getdate, add_days, cstr
-from aqp.air_quality.doctype.monitor_reading.monitor_reading import get_daily_average_readings
+from aqp.air_quality.doctype.reading_aggregate.reading_aggregate import get_daily_reading_aggregates
 import drawsvg as dw
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_svg_image(from_date, to_date, air_monitor=None):
-	frappe.response.filecontent = get_stripes_svg(from_date, to_date, air_monitor=air_monitor)
+def get_stripes_svg_image(from_date, to_date, monitor_region=None):
+	frappe.response.filecontent = get_stripes_svg(from_date, to_date, monitor_region=monitor_region)
 	frappe.response.filename = "test.svg"  # Todo filename
 	frappe.response.type = "download"
 	frappe.response.display_content_as = "inline"
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_svg(from_date, to_date, air_monitor=None):
-	daily_averages = get_daily_average_readings(from_date, to_date, air_monitor=air_monitor)
+def get_stripes_svg(from_date, to_date, monitor_region=None):
+	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
 	return draw_stripes_svg(daily_averages, from_date, to_date)
 
 
-def draw_stripes_svg(daily_averages, from_date, to_date):
+def draw_stripes_svg(daily_aggregates, from_date, to_date):
 	from_date = getdate(from_date)
 	to_date = getdate(to_date)
 	if to_date < from_date:
@@ -37,9 +37,9 @@ def draw_stripes_svg(daily_averages, from_date, to_date):
 
 	for day in range(days):
 		current_date = add_days(from_date, day)
-		date_dict = daily_averages.get(cstr(current_date)) or {}
+		date_dict = daily_aggregates.get(cstr(current_date)) or {}
 
-		pollutant_value = date_dict.get("pm_2_5_mean")
+		pollutant_value = date_dict.get("pm_2_5")
 		color = pm_2_5_to_color(pollutant_value)
 
 		x_offset = stripe_width * day

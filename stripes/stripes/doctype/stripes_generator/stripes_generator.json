@@ -11,7 +11,7 @@
   "from_date",
   "to_date",
   "column_break_bdse3",
-  "air_monitor",
+  "monitor_region",
   "stripes_image_section",
   "svg_display"
  ],
@@ -35,12 +35,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "air_monitor",
-   "fieldtype": "Link",
-   "label": "Air Monitor",
-   "options": "Air Monitor"
-  },
-  {
    "fieldname": "svg_display",
    "fieldtype": "HTML"
   },
@@ -53,12 +47,18 @@
    "fieldname": "stripes_image_section",
    "fieldtype": "Section Break",
    "label": "Stripes Image"
+  },
+  {
+   "fieldname": "monitor_region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Monitor Region"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-07-31 01:48:43.023929",
+ "modified": "2024-08-02 16:25:29.387590",
  "modified_by": "Administrator",
  "module": "Stripes",
  "name": "Stripes Generator",
