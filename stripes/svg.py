@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import cint, date_diff, getdate, add_days, cstr
+from frappe.utils import cint, date_diff, getdate, add_days, cstr, flt
 from aqp.air_quality.doctype.reading_aggregate.reading_aggregate import get_daily_reading_aggregates
 import drawsvg as dw
 
@@ -29,10 +29,10 @@ def draw_stripes_svg(daily_aggregates, from_date, to_date):
 	height = cint(svg_width / 2.5)
 
 	days = date_diff(to_date, from_date) + 1
-	stripe_width = svg_width / days
+	stripe_width = cint(flt(svg_width / days, 0))
 
 	drawing = dw.Drawing(svg_width, height)  # Todo IDs
-	group = dw.Group(fill="#ffffff")
+	group = dw.Group()
 	drawing.append(group)
 
 	for day in range(days):
@@ -52,7 +52,7 @@ def draw_stripes_svg(daily_aggregates, from_date, to_date):
 
 def pm_2_5_to_color(pollutant_value):
 	if not pollutant_value:
-		return "transparent"
+		return "#ffffff"
 
 	if pollutant_value < 20:
 		return "#B2EBF2"  # lighter cyan
