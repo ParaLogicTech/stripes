@@ -1,20 +1,26 @@
 import frappe
 from frappe import _
-from frappe.utils import cint, date_diff, getdate, add_days, cstr, flt
+from frappe.utils import cint, date_diff, getdate, add_days, cstr, flt, format_date
 from aqp.air_quality.doctype.reading_aggregate.reading_aggregate import get_daily_reading_aggregates
+from aqp.air_quality.doctype.monitor_region.monitor_region import get_root_region
+from dateutil import relativedelta
 import drawsvg as dw
 
 
 @frappe.whitelist(allow_guest=True)
 def get_stripes_svg_image(from_date, to_date, monitor_region=None):
+	monitor_region = validate_monitor_region(monitor_region)
+	file_name = get_file_name(from_date, to_date, monitor_region)
+
 	frappe.response.filecontent = get_stripes_svg(from_date, to_date, monitor_region=monitor_region)
-	frappe.response.filename = "test.svg"  # Todo filename
+	frappe.response.filename = f"{file_name}.svg"
 	frappe.response.type = "download"
 	frappe.response.display_content_as = "inline"
 
 
 @frappe.whitelist(allow_guest=True)
 def get_stripes_svg(from_date, to_date, monitor_region=None):
+	monitor_region = validate_monitor_region(monitor_region)
 	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
 	return draw_stripes_svg(daily_averages, from_date, to_date)
 
@@ -104,3 +110,45 @@ def pm_2_5_to_color(pollutant_value):
 		return "#3E2723"  # dark brown
 	else:
 		return "#212121"  # charcoal gray
+
+
+def validate_monitor_region(monitor_region):
+	if not monitor_region:
+		monitor_region = get_root_region()
+
+	if not monitor_region:
+		frappe.throw(_("Monitor Region not provided"))
+
+	if not frappe.db.exists("Monitor Region", monitor_region, cache=True):
+		frappe.throw(_("Monitor Region {0} not found").format(monitor_region), exc=frappe.DoesNotExistError)
+
+	return monitor_region
+
+
+def get_file_name(from_date, to_date, monitor_region):
+	monitor_region = validate_monitor_region(monitor_region)
+	from_date = getdate(from_date)
+	to_date = getdate(to_date)
+
+	delta = relativedelta.relativedelta(add_days(to_date, 1), from_date)
+
+	if from_date == to_date:
+		# Full date Only
+		date_str = f"{format_date(from_date, 'yyyyMMdd')}"
+	elif delta.years == 1 and delta.months == 0 and delta.days == 0 and from_date.month == 1 and from_date.day == 1:
+		# Year Only
+		date_str = format_date(from_date, 'yyyy')
+	elif delta.years > 1 and delta.months == 0 and delta.days == 0 and from_date.month == 1 and from_date.day == 1:
+		# Year range
+		date_str = f"{format_date(from_date, 'yyyy')}-{format_date(to_date, 'yyyy')}"
+	elif delta.years == 0 and delta.months == 1 and delta.days == 0 and from_date.day == 1:
+		# Year and Month only
+		date_str = format_date(from_date, 'yyyyMM')
+	elif delta.days == 0 and from_date.day == 1:
+		# Year and Month range
+		date_str = f"{format_date(from_date, 'yyyyMM')}-{format_date(to_date, 'yyyyMM')}"
+	else:
+		# Full date range
+		date_str = f"{format_date(from_date, 'yyyyMMdd')}-{format_date(to_date, 'yyyyMMdd')}"
+
+	return f"{monitor_region}_{date_str}"
