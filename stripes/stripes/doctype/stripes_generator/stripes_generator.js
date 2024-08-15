@@ -42,10 +42,7 @@ frappe.ui.form.on('Stripes Generator', {
 				wrapper.empty();
 
 				if (r.message) {
-					let $svg = $(r.message).appendTo(wrapper);
-					$svg.attr("width", null);
-					$svg.attr("height", null);
-					$svg.css("width", "100%");
+					$(r.message).appendTo(wrapper);
 				}
 			},
 			error() {
