@@ -87,7 +87,7 @@ class Combobox {
 		if (e.key === "Escape") {
 			this.input.blur();
 			this.dropdown.classList.remove("show");
-			this.dropdown_menu(".dropdown-menu").classList.remove("show");
+			this.dropdown_menu.classList.remove("show");
         }
 	}
 
