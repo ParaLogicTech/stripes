@@ -65,30 +65,30 @@ class Combobox {
 
 	handle_keyboard_controls(e) {
 		const items = this.list_items.filter(item => item.style.display === 'flex');
-        
-        if (e.key === "ArrowDown") {
-            this.currentFocus++;
-            if (this.currentFocus >= items.length) this.currentFocus = 0;
-            this.set_highlight(items);
-        }
+
+		if (e.key === "ArrowDown") {
+			this.currentFocus++;
+			if (this.currentFocus >= items.length) this.currentFocus = 0;
+			this.set_highlight(items);
+		}
 
 		if (e.key === "ArrowUp") {
-            this.currentFocus--;
-            if (this.currentFocus < 0) this.currentFocus = items.length - 1;
-            this.set_highlight(items);
-        }
+			this.currentFocus--;
+			if (this.currentFocus < 0) this.currentFocus = items.length - 1;
+			this.set_highlight(items);
+		}
 
 		if (e.key === "Enter") {
-            if (this.currentFocus > -1) {
-                items[this.currentFocus].click();
-            }
-        }
+			if (this.currentFocus > -1) {
+				items[this.currentFocus].click();
+			}
+		}
 
 		if (e.key === "Escape") {
 			this.input.blur();
 			this.dropdown.classList.remove("show");
 			this.dropdown_menu.classList.remove("show");
-        }
+		}
 	}
 
 	set_highlight(items) {
