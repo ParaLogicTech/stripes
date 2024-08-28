@@ -1,0 +1,38 @@
+.btn {
+	font-size: 1.1rem;
+	transition: $transition-base;
+	border-radius: 12px;
+	border-width: 1px;
+	border-style: solid;
+
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.btn.btn-small {
+	padding: 6px 20px;
+}
+
+.btn.btn-medium {
+	padding: 9px 28px;
+}
+
+.btn.btn-lg {
+	padding: 12px 30px;
+}
+
+@each $color, $value in $theme-colors {
+	.btn.btn-#{$color} {
+		border-color: darken($value, 9%);
+
+		&:hover, &:focus {
+			color: $black;
+			background-color: darken($value, 5%);
+		}
+
+		&:not(:disabled):not(.disabled):active {
+			color: $black;
+			background-color: lighten($value, 30%);
+		}
+	}
+}
