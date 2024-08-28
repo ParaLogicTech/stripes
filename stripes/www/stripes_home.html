@@ -1,0 +1,85 @@
+{% extends "templates/web.html" %}
+
+{% set full_width = True %}
+{% set no_breadcrumbs = True %}
+
+{% block style %}
+	{{ include_style("stripes_home.bundle.css") }}
+{% endblock %}
+
+{% block page_content %}
+	<!--  Stripes -->
+	<section class="stripes-section py-5">
+		<div class="container-2xl">
+			<div class="row">
+				<div class="col-12">
+					<div class="stripes-container">
+						{{ stripes }}
+					</div>
+				</div>
+			</div>
+
+			<!-- Download & Share Button -->
+			<div class="row mt-5">
+				<div class="col-12">
+					<div class="action-buttons text-right">
+						<button class="btn btn-download mr-2">
+							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
+							<span>Download</span>
+						</button>
+
+						<button class="btn btn-share">
+							<img src="/assets/stripes/images/icons/share.svg" alt="share-button">
+							<span>Share</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+<!-- Footer -->
+{% block footer %}
+	<footer>
+		<p>Interested in studying weather and climate? <a href="#">Take a look at our courses at the University of Reading</a></p>
+	</footer>
+{% endblock %}
+
+{% block script %}
+	<script src="/assets/stripes/js/combobox.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3/dist/fuse.min.js"></script>
+
+	<!-- For Dropdown & Tabs --> 
+	<script>
+		$(document).ready(function() {
+			$('.dropdown-menu').on('click', function(e) {
+				e.stopPropagation();
+			});
+	
+			$('.dropdown-menu').on('click', '.tab-button', function() {
+				let target = $(this).data('target');
+
+				// Switch active tab
+				$('.tab-button').removeClass('active');
+				$(this).addClass('active');
+
+				// Switch tab content
+				$('.tab-pane').removeClass('show active');
+				$(target).addClass('show active');
+			});
+	
+			$(document).on('click', function(e) {
+				if (!$(e.target).closest('.dropdown').length) {
+					$('.dropdown-menu').removeClass('show');
+				}
+			});
+
+			/* Combobox Initializing */
+			const contry = new Combobox(".combobox-country");
+			const region = new Combobox(".combobox-region");
+		});
+	</script>
+{% endblock %}
+
+
