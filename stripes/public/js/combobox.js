@@ -7,7 +7,7 @@ class Combobox {
 		this.input = this.wrapper.querySelector("input");
 		this.list_items_container = this.wrapper.querySelector("ul.list");
 		this.list_items = Array.from(this.wrapper.querySelectorAll("ul.list li"));
-		this.currentFocus = -1;
+		this.current_focus = -1;
 
 		this.initialize();
 	}
@@ -69,24 +69,24 @@ class Combobox {
 		if (e.key === "ArrowDown") {
 			e.preventDefault();
 
-			this.currentFocus++;
-			if (this.currentFocus >= items.length) this.currentFocus = 0;
+			this.current_focus++;
+			if (this.current_focus >= items.length) this.current_focus = 0;
 			this.set_highlight(items);
 		}
 
 		if (e.key === "ArrowUp") {
 			e.preventDefault();
 
-			this.currentFocus--;
-			if (this.currentFocus < 0) this.currentFocus = items.length - 1;
+			this.current_focus--;
+			if (this.current_focus < 0) this.current_focus = items.length - 1;
 			this.set_highlight(items);
 		}
 
 		if (e.key === "Enter") {
 			e.preventDefault();
 
-			if (this.currentFocus > -1) {
-				items[this.currentFocus].click();
+			if (this.current_focus > -1) {
+				items[this.current_focus].click();
 			}
 		}
 
@@ -99,9 +99,9 @@ class Combobox {
 
 	set_highlight(items) {
 		this.remove_highlight(items);
-		if (this.currentFocus > -1 && this.currentFocus < items.length) {
-			items[this.currentFocus].classList.add("active");
-			items[this.currentFocus].scrollIntoView({ block: 'nearest' });
+		if (this.current_focus > -1 && this.current_focus < items.length) {
+			items[this.current_focus].classList.add("active");
+			items[this.current_focus].scrollIntoView({ block: 'nearest' });
 		}
 	}
 
