@@ -67,18 +67,24 @@ class Combobox {
 		const items = this.list_items.filter(item => item.style.display === 'flex');
 
 		if (e.key === "ArrowDown") {
+			e.preventDefault();
+
 			this.currentFocus++;
 			if (this.currentFocus >= items.length) this.currentFocus = 0;
 			this.set_highlight(items);
 		}
 
 		if (e.key === "ArrowUp") {
+			e.preventDefault();
+
 			this.currentFocus--;
 			if (this.currentFocus < 0) this.currentFocus = items.length - 1;
 			this.set_highlight(items);
 		}
 
 		if (e.key === "Enter") {
+			e.preventDefault();
+
 			if (this.currentFocus > -1) {
 				items[this.currentFocus].click();
 			}
@@ -127,7 +133,7 @@ class Combobox {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
 				} else {
-					this._reset_item_selection();
+					this.reset_item_selection();
 
 					// Select the clicked item
 					if (!item.querySelector("img")) {
@@ -139,7 +145,7 @@ class Combobox {
 		});
 	}
 
-	_reset_item_selection() {
+	reset_item_selection() {
 		this.list_items.forEach(i => {
 			i.classList.remove("selected");
 			i.querySelector("img")?.remove();
