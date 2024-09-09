@@ -9,3 +9,28 @@
 		</div>
     </div>
 </nav>
+
+<!-- For Dropdown & Tabs -->
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		$('.dropdown-menu').each(function() {
+			$(this).on('click', function(e) {
+				e.stopPropagation();
+			});
+
+			$(this).on('click', function(e) {
+				if ($(e.target).hasClass('tab-button')) {
+					let target = $(e.target).data('target');
+
+					// Switch active tab
+					$(this).find('.tab-button').removeClass('active');
+					$(e.target).addClass('active');
+
+					// Switch tab content
+					$(this).find('.tab-pane').removeClass('show active');
+					$(target).addClass('show active');
+				}
+			});
+		});
+	});
+</script>
