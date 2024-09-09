@@ -65,6 +65,10 @@ footer {
 		text-align: center;
 		color: $gray-700;
 
+		@include media-breakpoint-down (md) {
+			font-size: .8rem;
+		}
+
 		a {
 			color: $gray-700;
 			font-weight: 600;

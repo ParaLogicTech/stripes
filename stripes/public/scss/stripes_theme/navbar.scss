@@ -9,7 +9,7 @@
 		font-size: 1.625rem;
 		font-weight: 400;
 
-		@include media-breakpoint-down (md) {
+		@include media-breakpoint-down (sm) {
 			font-size: 1.2rem;
 		}
 	}
@@ -49,13 +49,15 @@
 				}
 
 				.dropdown-menu {
-					max-width: 330px;
+					position: absolute;
+					width: 310px;
 					border: 1px solid $border-color;
 					border-radius: 8px;
 
 					padding-block: 3px;
 					padding-inline: 1px;
 					top: 53px;
+					transition: all 0.2s ease-out;
 
 					.nav-tabs {
 						display: flex;

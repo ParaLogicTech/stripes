@@ -18,7 +18,7 @@ class Combobox {
 	}
 
 	initialize() {
-		this.items = this.list_items.map(item => ({ name: item.textContent.trim(), element: item } ));
+		this.items = this.list_items.map(item => ({ name: item.innerText.trim(), element: item } ));
 
 		this.fuse = new Fuse(this.items, {
 			keys: ["name"],
@@ -39,7 +39,7 @@ class Combobox {
 
 		// Input Focus
 		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
-		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
+		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0), this.set_dropdown_position());
 
 		// Bind Item Selection
 		this.list_items.forEach(item => {
@@ -48,6 +48,9 @@ class Combobox {
 				this.on_change?.(this.current_value);
 			});
 		});
+
+		// Adjust dropdown position on window resize
+		window.addEventListener('resize', () => this.set_dropdown_position());
 	}
 
 	filter_items() {
@@ -162,5 +165,23 @@ class Combobox {
 				item.querySelector("img")?.remove();
 			}
 		}
+	}
+
+	set_dropdown_position() {
+		// Show Dropdown for correct calculation
+		this.dropdown_menu.style.display = 'block';
+
+		const dropdown_rect = this.dropdown.getBoundingClientRect();
+		const menu_rect = this.dropdown_menu.getBoundingClientRect();
+
+		if (window.innerWidth - dropdown_rect.right < menu_rect.width) {
+			this.dropdown_menu.style.left = 'unset';
+			this.dropdown_menu.style.right = '0';
+		} else {
+			this.dropdown_menu.style.left = '0';
+			this.dropdown_menu.style.right = 'unset';
+		}
+
+		this.dropdown_menu.style.display = '';
 	}
 }
