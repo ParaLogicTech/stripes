@@ -8,11 +8,21 @@
 	.logo {
 		font-size: 1.625rem;
 		font-weight: 400;
+
+		@include media-breakpoint-down (md) {
+			font-size: 1.2rem;
+		}
 	}
 
 	.navbar-nav {
-		margin-left: 350px;
-		gap: 12px;
+		margin-left: 24%;
+		gap: 15px;
+
+		@include media-breakpoint-down (md) {
+			margin-left: unset;
+			justify-content: center;
+			flex-direction: row;
+		}
 
 		.nav-item {
 			span {
@@ -39,28 +49,31 @@
 				}
 
 				.dropdown-menu {
-					max-width: 500px;
+					max-width: 330px;
 					border: 1px solid $border-color;
 					border-radius: 8px;
 
 					padding-block: 3px;
-					padding-inline: 0;
+					padding-inline: 1px;
 					top: 53px;
 
 					.nav-tabs {
 						display: flex;
-						justify-content: space-between;
 						border: none;
-						column-gap: 20px;
+						column-gap: 1px;
 
 						li:has(.active) {
 							border-bottom: 2px solid $dark-green;
 						}
 
+						li {
+							width: 110px;
+							text-align: center;
+						}
+
 						.tab-button {
-							padding: 0 45px;
 							padding-top: 16px;
-							padding-bottom: 10px;
+							padding-bottom: 12px;
 							font-size: 1rem;
 							color: $dark-green;
 							font-weight: 600;
@@ -76,10 +89,10 @@
 						position: relative;
 
 						img {
-							width: 18px;
+							width: 17px;
 							position: absolute;
 							top: 50%;
-							left: 10px;
+							left: 12px;
 							transform: translateY(-50%);
 						}
 
@@ -89,10 +102,17 @@
 							font-size: 1rem;
 							border-radius: 8px;
 							padding-left: 35px;
-							padding-block: 21px;
+							padding-block: 11px;
+							line-height: 0;
+							height: unset;
 
 							&:focus {
 								border-color: #a0a0a0;
+							}
+
+							&::placeholder {
+								color: #54575c;
+								font-size: .9rem;
 							}
 						}
 					}
@@ -121,6 +141,7 @@
 						&::-webkit-scrollbar-thumb {
 							background: #eaecf0;
 							border-radius: 10px;
+							transition: all 0.3s ease-out;
 						}
 
 						li {
@@ -140,7 +161,7 @@
 						}
 
 						li.active {
-							background-color: #f2fffa;
+							background-color: $green;
 						}
 
 						li.selected,
