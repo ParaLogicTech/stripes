@@ -5,46 +5,23 @@
 		<!-- Global -->
 		<div class="dropdown">
 			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-				<span>Global</span>
+				<span>Select</span>
 				<img src="/assets/stripes/images/icons/arrow-down.svg" />
 			</button>
+
+			<!-- DropDown Menu -->
 			<div class="dropdown-menu">
+				<!-- Nav Tabs -->
 				<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
-					<li>
-						<button class="btn-reset tab-button active" id="country-tab" data-toggle="tab" data-target="#country">Country</button>
-					</li>
-					<li>
-						<button class="btn-reset tab-button" id="region-tab" data-toggle="tab" data-target="#region">Region</button>
-					</li>
+					<li><button class="btn-reset tab-button active" id="region-tab" data-toggle="tab" data-target="#region">Region</button></li>
+					<li><button class="btn-reset tab-button" id="country-tab" data-toggle="tab" data-target="#country">Country</button></li>
+					<li><button class="btn-reset tab-button" id="region-tab" data-toggle="tab" data-target="#city">City</button></li>
 				</ul>
 
+				<!-- Nav Tabs Content -->
 				<div class="tab-content" id="dropdown-tab-content">
-					<div class="tab-pane fade show active" id="country">
-						<!-- Search -->
-						<div class="combobox-country">
-							<div class="form-group d-flex align-item-center">
-								<img src="/assets/stripes/images/icons/search.svg" alt="search">
-								<input type="text" class="form-control search" placeholder="Search">
-							</div>
-
-							<!-- List -->
-							 <ul class="list">
-								<li>Pakistan</li>
-								<li>India</li>
-								<li>Indonesia</li>
-								<li>Bangladesh</li>
-								<li>Canada</li>
-								<li>Nepal</li>
-								<li>Scotland</li>
-								<li>America</li>
-								<li>Dubai</li>
-								<li>Turkey</li>
-							 </ul>
-						</div>
-					</div>
-
-					<div class="tab-pane fade" id="region">
-						<div class="combobox-region">
+					<div class="tab-pane fade show active" id="region">
+						<div class="region">
 							<!-- Search -->
 							<div class="form-group d-flex align-item-center">
 								<img src="/assets/stripes/images/icons/search.svg" alt="search">
@@ -53,11 +30,45 @@
 
 							<!-- List -->
 							<ul class="list">
-								<li>Asia</li>
-								<li>Europe</li>
-								<li>South America</li>
-								<li>North America</li>
-								<li>Africa</li>
+								{% for region in monitor.region %}
+									<li>{{ region.name }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+
+					<!-- Country -->
+					<div class="tab-pane fade" id="country">
+						<!-- Search -->
+						<div class="country">
+							<div class="form-group d-flex align-item-center">
+								<img src="/assets/stripes/images/icons/search.svg" alt="search">
+								<input type="text" class="form-control search" placeholder="Search">
+							</div>
+
+							<!-- List -->
+							 <ul class="list">
+								{% for country in monitor.country %}
+									<li>{{ country.name }}</li>
+								{% endfor %}
+							 </ul>
+						</div>
+					</div>
+
+					<!-- City -->
+					<div class="tab-pane fade" id="city">
+						<div class="city">
+							<!-- Search -->
+							<div class="form-group d-flex align-item-center">
+								<img src="/assets/stripes/images/icons/search.svg" alt="search">
+								<input type="text" class="form-control search" placeholder="Search">
+							</div>
+
+							<!-- List -->
+							<ul class="list">
+								{% for city in monitor.city %}
+									<li>{{ city.name }}</li>
+								{% endfor %}
 							</ul>
 						</div>
 					</div>
@@ -66,16 +77,80 @@
 		</div>
 	</li>
 
+	<!-- Stripes -->
 	<li class="nav-item d-flex align-items-center">
 		<span class="mr-3">air pollution with</span>
 
 		<div class="dropdown">
 			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-				<span>Stripes</span>
+				<span>Select</span>
 				<img src="/assets/stripes/images/icons/arrow-down.svg" />
 			</button>
+
+			<!-- DropDown Menu -->
 			<div class="dropdown-menu">
-				...
+				<!-- Nav Tabs -->
+				<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
+					<li><button class="btn-reset tab-button active" id="stripe-tab" data-toggle="tab" data-target="#stripe">Stripe</button></li>
+					<li><button class="btn-reset tab-button" id="controll-tab" data-toggle="tab" data-target="#controll">Controll</button></li>
+					<li><button class="btn-reset tab-button" id="data-tab" data-toggle="tab" data-target="#data">Data</button></li>
+				</ul>
+
+				<!-- Nav Tabs Content -->
+				<div class="tab-content" id="dropdown-tab-content">
+					<div class="tab-pane fade show active" id="stripe">
+						<div class="stripe">
+							<!-- Search -->
+							<div class="form-group d-flex align-item-center">
+								<img src="/assets/stripes/images/icons/search.svg" alt="search">
+								<input type="text" class="form-control search" placeholder="Search">
+							</div>
+
+							<!-- List -->
+							<ul class="list">
+								<li>Bars</li>
+								<li>Chart</li>
+								<li>Lines</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Controll -->
+					<div class="tab-pane fade" id="controll">
+						<!-- Search -->
+						<div class="controll">
+							<div class="form-group d-flex align-item-center">
+								<img src="/assets/stripes/images/icons/search.svg" alt="search">
+								<input type="text" class="form-control search" placeholder="Search">
+							</div>
+
+							<!-- List -->
+							 <ul class="list">
+								<li>Slow</li>
+								<li>Medium</li>
+								<li>Fast</li>
+							 </ul>
+						</div>
+					</div>
+
+					<!-- Data -->
+					<div class="tab-pane fade" id="data">
+						<!-- Search -->
+						<div class="data">
+							<div class="form-group d-flex align-item-center">
+								<img src="/assets/stripes/images/icons/search.svg" alt="search">
+								<input type="text" class="form-control search" placeholder="Search">
+							</div>
+
+							<!-- List -->
+							<ul class="list">
+								<li>High</li>
+								<li>100B</li>
+								<li>Low</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</li>

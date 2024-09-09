@@ -50,35 +50,37 @@
 	<script src="/assets/stripes/js/combobox.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3/dist/fuse.min.js"></script>
 
-	<!-- For Dropdown & Tabs --> 
+	<!-- Combobox Initializing -->
 	<script>
 		$(document).ready(function() {
-			$('.dropdown-menu').on('click', function(e) {
-				e.stopPropagation();
-			});
-	
-			$('.dropdown-menu').on('click', '.tab-button', function() {
-				let target = $(this).data('target');
-
-				// Switch active tab
-				$('.tab-button').removeClass('active');
-				$(this).addClass('active');
-
-				// Switch tab content
-				$('.tab-pane').removeClass('show active');
-				$(target).addClass('show active');
-			});
-	
-			$(document).on('click', function(e) {
-				if (!$(e.target).closest('.dropdown').length) {
-					$('.dropdown-menu').removeClass('show');
-				}
+			$('#dropdownMenuButton').on('show.bs.dropdown', function () {
+			  console.log('Dropdown is about to be shown!');
 			});
 
-			/* Combobox Initializing */
-			const contry = new Combobox(".combobox-country");
-			const region = new Combobox(".combobox-region");
-		});
+			$('#dropdownMenuButton').on('shown.bs.dropdown', function () {
+			  console.log('Dropdown has been fully shown!');
+			});
+		  });
+
+		const sync_region_comboboxes = (value, from) => {
+			if (country != from) {
+				country.set_value(value);
+			}
+			if (region != from) {
+				region.set_value(value);
+			}
+			if (city != from) {
+				city.set_value(value);
+			}
+		};
+
+		const country = new Combobox(".country", (value) => sync_region_comboboxes(value, country));
+		const region = new Combobox(".region", (value) => sync_region_comboboxes(value, region));
+		const city = new Combobox(".city", (value) => sync_region_comboboxes(value, city));
+
+		const stripe = new Combobox(".stripe");
+		const controll = new Combobox(".controll");
+		const data = new Combobox(".data");
 	</script>
 {% endblock %}
 

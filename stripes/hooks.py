@@ -9,12 +9,10 @@ app_license = "GNU General Public License (v3)"
 
 required_apps = ["ParaLogicTech/aqp"]
 
-web_include_css = [
-	"/assets/stripes/css/fonts/inter/inter.css",
-]
+web_include_css = ["/assets/stripes/css/fonts/inter/inter.css"]
 
-website_context = {
-	"custom_theme_bundle": "stripes_theme.bundle.css",
-}
+website_context = {"custom_theme_bundle": "stripes_theme.bundle.css"}
 
 home_page = "stripes_home"
+
+update_website_context = ["stripes.overrides.update_website_context"]
