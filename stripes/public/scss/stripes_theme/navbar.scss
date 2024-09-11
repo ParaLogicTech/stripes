@@ -2,8 +2,16 @@
 	min-height: 95px;
 	padding-top: 0;
 	padding-bottom: 0;
+	padding-block: 9px;
+
 	box-shadow: 0 0 15px rgb(0 0 0 / 8%);
 	border-bottom: 1px solid $border-color;
+
+	.container-2xl {
+		@include media-breakpoint-down (sm) {
+			gap: 8px;
+		}
+	}
 
 	.logo {
 		font-size: 1.625rem;
@@ -24,10 +32,23 @@
 			flex-direction: row;
 		}
 
+		@include media-breakpoint-down (sm) {
+			justify-content: space-around;
+		}
+
 		.nav-item {
+			@include media-breakpoint-down (sm) {
+				flex-direction: column;
+				gap: 8px;
+			}
+
 			span {
 				color: $light;
 				font-size: 1.1rem;
+
+				@include media-breakpoint-down (sm) {
+					font-size: .9rem;
+				}
 			}
 
 			.dropdown {
@@ -50,7 +71,7 @@
 
 				.dropdown-menu {
 					position: absolute;
-					width: 310px;
+					width: 325px;
 					border: 1px solid $border-color;
 					border-radius: 8px;
 
@@ -62,6 +83,7 @@
 					.nav-tabs {
 						display: flex;
 						border: none;
+						justify-content: space-between;
 						column-gap: 1px;
 
 						li:has(.active) {
@@ -69,11 +91,12 @@
 						}
 
 						li {
-							width: 110px;
+							width: 100%;
 							text-align: center;
 						}
 
 						.tab-button {
+							width: 105px;
 							padding-top: 16px;
 							padding-bottom: 12px;
 							font-size: 1rem;
