@@ -2,6 +2,7 @@ class Combobox {
 	constructor(wrapper, on_change) {
 		this.wrapper = document.querySelector(wrapper);
 
+		this.stripes_container = document.querySelector(".stripes-container");
 		this.dropdown = this.wrapper.closest(".dropdown");
 		this.dropdown_menu = this.dropdown.querySelector(".dropdown-menu");
 		this.dropdown_button = this.dropdown.querySelector(".dropdown-toggle");
@@ -46,6 +47,7 @@ class Combobox {
 			item.addEventListener("click", (e) => {
 				this.set_value(item.innerText);
 				this.on_change?.(this.current_value);
+				this.fetch_stripes();
 			});
 		});
 
@@ -152,12 +154,10 @@ class Combobox {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
 					this.dropdown_button.querySelector("span").innerText = "Select"
+					this.current_value = null;
 				} else {
-					if (!item.querySelector("img")) {
-						item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
-					}
+					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
 					item.classList.add("selected");
-					// Change the button text after select a item.
 					this.dropdown_button.querySelector("span").innerText = this.current_value;
 				}
 			} else {
@@ -174,14 +174,30 @@ class Combobox {
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
 		const menu_rect = this.dropdown_menu.getBoundingClientRect();
 
-		if (window.innerWidth - dropdown_rect.right < menu_rect.width) {
-			this.dropdown_menu.style.left = 'unset';
-			this.dropdown_menu.style.right = '0';
-		} else {
+		if (window.innerWidth - (dropdown_rect.right - 20) >= menu_rect.width) {
 			this.dropdown_menu.style.left = '0';
 			this.dropdown_menu.style.right = 'unset';
+		} else {
+			this.dropdown_menu.style.left = 'unset';
+			this.dropdown_menu.style.right = '0';
 		}
 
 		this.dropdown_menu.style.display = '';
+	}
+
+	fetch_stripes() {
+		frappe.call({
+			method: 'stripes.svg.get_stripes_svg',
+			args: {
+				from_date: "2018-01-01",
+				to_date: "2018-12-31",
+				monitor_region: this.current_value
+			},
+			callback: (response) => {
+				if (response.message) {
+					this.stripes_container.innerHTML = response.message;
+				}
+			}
+		});
 	}
 }
