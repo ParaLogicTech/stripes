@@ -3,9 +3,13 @@ class Combobox {
 		this.wrapper = document.querySelector(wrapper);
 
 		this.stripes_container = document.querySelector(".stripes-container");
+		this.stripes = document.querySelector(".stripes-container .stripes");
+
 		this.dropdown = this.wrapper.closest(".dropdown");
 		this.dropdown_menu = this.dropdown.querySelector(".dropdown-menu");
 		this.dropdown_button = this.dropdown.querySelector(".dropdown-toggle");
+
+		this.button_initial_text = this.dropdown_button.querySelector("span").innerText;
 
 		this.search = this.wrapper.querySelector("input");
 		this.list_items_container = this.wrapper.querySelector("ul.list");
@@ -153,12 +157,12 @@ class Combobox {
 				if(is_selected) {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
-					this.dropdown_button.querySelector("span").innerText = "Select"
+					this.dropdown_button.querySelector("span").innerText = this.button_initial_text;
 					this.current_value = null;
 				} else {
 					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
 					item.classList.add("selected");
-					this.dropdown_button.querySelector("span").innerText = this.current_value;
+					this.dropdown_button.querySelector("span").textContent = this.current_value;
 				}
 			} else {
 				item.classList.remove("selected");
@@ -173,8 +177,9 @@ class Combobox {
 
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
 		const menu_rect = this.dropdown_menu.getBoundingClientRect();
+		const offset = 75;
 
-		if (window.innerWidth - (dropdown_rect.right - 20) >= menu_rect.width) {
+		if (window.innerWidth - (dropdown_rect.right - offset) >= menu_rect.width) {
 			this.dropdown_menu.style.left = '0';
 			this.dropdown_menu.style.right = 'unset';
 		} else {
@@ -186,18 +191,25 @@ class Combobox {
 	}
 
 	fetch_stripes() {
-		frappe.call({
-			method: 'stripes.svg.get_stripes_svg',
-			args: {
-				from_date: "2018-01-01",
-				to_date: "2018-12-31",
-				monitor_region: this.current_value
-			},
-			callback: (response) => {
-				if (response.message) {
-					this.stripes_container.innerHTML = response.message;
+		// Add class to the container before fetching the result.
+		this.stripes_container.classList.add("loading");
+
+		setTimeout(() => {
+			frappe.call({
+				method: 'stripes.svg.get_stripes_svg',
+				args: {
+					from_date: "2018-01-01",
+					to_date: "2018-12-31",
+					monitor_region: this.current_value
+				},
+				callback: (response) => {
+					if (response.message) {
+						this.stripes.innerHTML = response.message;
+					}
+					// Remove class from the container after receiving the result.
+					this.stripes_container.classList.remove("loading");
 				}
-			}
-		});
+			});
+		}, 300);
 	}
 }
