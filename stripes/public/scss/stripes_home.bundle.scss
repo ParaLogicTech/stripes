@@ -8,7 +8,6 @@
 
 /* Stripes Section */
 .stripes-section {
-	position: relative;
 	background-color: var(--light-gray);
 	height: calc(100vh - 100px);
 
@@ -23,6 +22,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
 
 		svg {
 			border-radius: $border-radius-lg;
@@ -45,6 +45,7 @@
 			-webkit-backdrop-filter: blur(4px);
 			opacity: 0;
 			transition: opacity .3s ease-out;
+			pointer-events: none;
 		}
 
 		.loader {
@@ -57,7 +58,12 @@
 			animation: l1 1s infinite;
 			opacity: 0;
 			user-select: none;
+			pointer-events: none;
 			transition: opacity .3s ease-out;
+
+			@include media-breakpoint-down (sm) {
+				width: 40px;
+			}
 		}
 		@keyframes l1 {to {transform: rotate(.5turn)} }
 	}
@@ -84,6 +90,10 @@
 				vertical-align: middle;
 				width: 12px;
 			}
+
+			a {
+				all: unset;
+			}
 		}
 
 		.btn-download,
@@ -109,7 +119,7 @@ footer {
 		color: $gray-700;
 
 		@include media-breakpoint-down (md) {
-			font-size: .8rem;
+			font-size: .7rem;
 		}
 
 		a {

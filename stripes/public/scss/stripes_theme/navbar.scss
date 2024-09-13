@@ -1,4 +1,4 @@
-.navbar {
+.navbar.navbar-home {
 	min-height: 95px;
 	padding-top: 0;
 	padding-bottom: 0;
@@ -9,7 +9,7 @@
 
 	.container-2xl {
 		@include media-breakpoint-down (sm) {
-			gap: 8px;
+			gap: 10px;
 		}
 	}
 
@@ -18,7 +18,7 @@
 		font-weight: 400;
 
 		@include media-breakpoint-down (sm) {
-			font-size: 1.2rem;
+			font-size: 1.3rem;
 		}
 	}
 
@@ -33,30 +33,31 @@
 		}
 
 		@include media-breakpoint-down (sm) {
-			justify-content: space-around;
+			gap: 28px;
 		}
 
 		.nav-item {
 			@include media-breakpoint-down (sm) {
 				flex-direction: column;
-				gap: 8px;
+				gap: 10px;
 			}
 
 			span {
 				color: $light;
 				font-size: 1.1rem;
 
+				@include media-breakpoint-down (md) {
+					font-size: 1rem;
+				}
+
 				@include media-breakpoint-down (sm) {
-					font-size: .9rem;
+					font-size: .8rem;
 				}
 			}
 
 			.dropdown {
 				.dropdown-toggle {
-					&::after {
-						all: unset;
-					}
-
+					position: relative;
 					display: flex;
 					align-items: center;
 					column-gap: 9px;
@@ -66,6 +67,10 @@
 
 					span {
 						color: #46526C;
+					}
+
+					&::after {
+						all: unset;
 					}
 				}
 
@@ -79,6 +84,14 @@
 					padding-inline: 1px;
 					top: 53px;
 					transition: all 0.2s ease-out;
+
+					@include media-breakpoint-down (sm) {
+						width: 245px;
+					}
+
+					@media (max-width: 325px) {
+						width: 225px;
+					}
 
 					.nav-tabs {
 						display: flex;
@@ -96,7 +109,6 @@
 						}
 
 						.tab-button {
-							width: 105px;
 							padding-top: 16px;
 							padding-bottom: 12px;
 							font-size: 1rem;
@@ -183,6 +195,10 @@
 							margin-right: 10px;
 							justify-content: space-between;
 							align-items: center;
+
+							@include media-breakpoint-down (sm) {
+								font-size: .9rem;
+							}
 						}
 
 						li.active {
@@ -198,4 +214,9 @@
 			}
 		}
 	}
+}
+
+// For Login Page
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link.active {
+	color: $black;
 }

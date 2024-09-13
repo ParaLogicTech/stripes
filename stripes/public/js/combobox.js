@@ -9,7 +9,7 @@ class Combobox {
 		this.dropdown_menu = this.dropdown.querySelector(".dropdown-menu");
 		this.dropdown_button = this.dropdown.querySelector(".dropdown-toggle");
 
-		this.button_initial_text = this.dropdown_button.querySelector("span").innerText;
+		this.default_button_label = this.dropdown_button.querySelector("span").innerText;
 
 		this.search = this.wrapper.querySelector("input");
 		this.list_items_container = this.wrapper.querySelector("ul.list");
@@ -53,6 +53,9 @@ class Combobox {
 				this.on_change?.(this.current_value);
 				this.fetch_stripes();
 			});
+
+			// Stop Event Bubbling
+			item.addEventListener(("click"), (e) => e.stopPropagation());
 		});
 
 		// Adjust dropdown position on window resize
@@ -157,7 +160,7 @@ class Combobox {
 				if(is_selected) {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
-					this.dropdown_button.querySelector("span").innerText = this.button_initial_text;
+					this.dropdown_button.querySelector("span").innerText = this.default_button_label;
 					this.current_value = null;
 				} else {
 					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
@@ -176,10 +179,11 @@ class Combobox {
 		this.dropdown_menu.style.display = 'block';
 
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
-		const menu_rect = this.dropdown_menu.getBoundingClientRect();
-		const offset = 75;
+		const dropdown_width = this.dropdown_menu.offsetWidth;
+		const offset = dropdown_rect.right - 75;
+		const right_space = window.innerWidth - offset;
 
-		if (window.innerWidth - (dropdown_rect.right - offset) >= menu_rect.width) {
+		if (right_space > dropdown_width) {
 			this.dropdown_menu.style.left = '0';
 			this.dropdown_menu.style.right = 'unset';
 		} else {
