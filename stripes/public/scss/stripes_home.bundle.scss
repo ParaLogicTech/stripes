@@ -6,10 +6,19 @@
 	--button-border-color: #D0D5DD;
 }
 
+.page_content {
+	min-height: unset;
+}
+
 /* Stripes Section */
 .stripes-section {
-	background-color: var(--light-gray);
-	height: calc(100vh - 100px);
+	min-height: calc(100vh - 150px);
+
+	@include media-breakpoint-down (sm) {
+		min-height: calc(100vh - 199px);
+		display: flex;
+		align-items: center;
+	}
 
 	.stripes-container {
 		width: 100%;
@@ -23,6 +32,16 @@
 		align-items: center;
 		justify-content: center;
 		position: relative;
+
+		@include media-breakpoint-down (sm) {
+			min-height: 50vh;
+		}
+
+		.stripes {
+			@include media-breakpoint-down (md) {
+				height: 100%;
+			}
+		}
 
 		svg {
 			border-radius: $border-radius-lg;
@@ -111,7 +130,9 @@ footer {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 50px;
+	width: 100%;
+	padding: 15px;
+	border-top: 1px solid $border-color;
 
 	p {
 		margin-bottom: 0;

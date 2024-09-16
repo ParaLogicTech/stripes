@@ -20,6 +20,7 @@ class Combobox {
 		this.current_value = null;
 
 		this.initialize();
+		this.set_dropdown_position();
 	}
 
 	initialize() {
@@ -44,7 +45,7 @@ class Combobox {
 
 		// Input Focus
 		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
-		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0), this.set_dropdown_position());
+		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
 
 		// Bind Item Selection
 		this.list_items.forEach(item => {
