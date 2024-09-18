@@ -122,6 +122,10 @@
 			&:hover {
 				border-color: darken(#D0D5DD, 20%);
 			}
+			&:active {
+				background-color: transparent !important;
+				border-color: darken(#D0D5DD, 20%);
+			}
 		}
 	}
 }

@@ -187,9 +187,9 @@
 {% endblock %}
 
 {% block script %}
-	<script src="/assets/stripes/js/combobox.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3/dist/fuse.min.js"></script>
+	{{ include_script("combobox.bundle.js") }}
 
+	<!-- Js -->
 	<script>
 		/* For Dropdown & Tabs */
 		$(document).ready(function() {
@@ -227,10 +227,12 @@
 			}
 		};
 
+		/* Global Combobox */
 		const country = new Combobox(".country", (value) => sync_region_comboboxes(value, country));
 		const region = new Combobox(".region", (value) => sync_region_comboboxes(value, region));
 		const city = new Combobox(".city", (value) => sync_region_comboboxes(value, city));
 
+		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
 	</script>
 {% endblock %}

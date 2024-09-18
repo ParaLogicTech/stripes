@@ -1,3 +1,5 @@
+import Fuse from 'fuse.js';
+
 class Combobox {
 	constructor(wrapper, on_change) {
 		this.wrapper = document.querySelector(wrapper);
@@ -229,3 +231,6 @@ class Combobox {
 		}, 300);
 	}
 }
+
+// Add Combobox globally
+window.Combobox = Combobox;
