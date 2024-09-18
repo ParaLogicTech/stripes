@@ -176,12 +176,12 @@ class Combobox {
 	}
 
 	set_dropdown_position() {
-		// Show Dropdown for correct calculation
+		// Show dropdown before positioning
 		this.dropdown_menu.style.display = 'block';
 
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
 		const dropdown_width = this.dropdown_menu.offsetWidth;
-		const offset = dropdown_rect.right - 28;
+		const offset = dropdown_rect.right - 26;
 
 		const space_on_right = window.innerWidth - offset;
 		const space_on_left = dropdown_rect.left;
