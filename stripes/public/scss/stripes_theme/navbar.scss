@@ -5,7 +5,7 @@
 	padding-block: 9px;
 
 	box-shadow: 0 0 15px rgb(0 0 0 / 8%);
-	border-bottom: 1px solid $border-color;
+	border-bottom: 1px solid #b4bfd6;
 
 	.container-2xl {
 		@include media-breakpoint-down (sm) {
