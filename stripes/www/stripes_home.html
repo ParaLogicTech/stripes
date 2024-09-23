@@ -1,0 +1,240 @@
+{% extends "templates/web.html" %}
+
+{% set full_width = True %}
+{% set no_breadcrumbs = True %}
+
+{% block style %}
+	{{ include_style("stripes_home.bundle.css") }}
+{% endblock %}
+
+{% block navbar %}
+	<nav class="navbar navbar-home navbar-expand-lg">
+		<div class="container-2xl justify-content-start align-items-center flex-nowrap flex-column flex-md-row">
+			<a class="navbar-brand" href="{{ url_prefix }}{{ home_page or " /" }}">
+				<h1 class="m-0 logo">Pollution Stripes</h2>
+			</a>
+
+			<!-- Nav Items -->
+			<div class="nav-bar-menu w-100" id="navbarSupportedContent">
+				<ul class="navbar-nav">
+					<li class="nav-item d-flex align-items-center">
+						<span class="mr-0 mr-md-3">Visualize</span>
+
+						<!-- Global -->
+						<div class="dropdown">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								<span>Global</span>
+								<img src="/assets/stripes/images/icons/arrow-down.svg" />
+							</button>
+
+							<!-- DropDown Menu -->
+							<div class="dropdown-menu">
+								<!-- Nav Tabs -->
+								<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
+									<li><button class="btn-reset tab-button active" id="region-tab" data-toggle="tab" data-target="#region">Region</button></li>
+									<li><button class="btn-reset tab-button" id="country-tab" data-toggle="tab" data-target="#country">Country</button></li>
+									<li><button class="btn-reset tab-button" id="region-tab" data-toggle="tab" data-target="#city">City</button></li>
+								</ul>
+
+								<!-- Nav Tabs Content -->
+								<div class="tab-content" id="dropdown-tab-content">
+									<div class="tab-pane fade show active" id="region">
+										<div class="region">
+											<!-- Search -->
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											<ul class="list">
+												{% for region in monitor.region %}
+													<li>{{ region.name }}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+
+									<!-- Country -->
+									<div class="tab-pane fade" id="country">
+										<!-- Search -->
+										<div class="country">
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											 <ul class="list">
+												{% for country in monitor.country %}
+													<li>{{ country.name }}</li>
+												{% endfor %}
+											 </ul>
+										</div>
+									</div>
+
+									<!-- City -->
+									<div class="tab-pane fade" id="city">
+										<div class="city">
+											<!-- Search -->
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											<ul class="list">
+												{% for city in monitor.city %}
+													<li>{{ city.name }}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+
+					<!-- Stripes -->
+					<li class="nav-item d-flex align-items-center">
+						<span class="mr-0 mr-md-3">air pollution</span>
+
+						<div class="dropdown">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" >
+								<span>Stripes</span>
+								<img src="/assets/stripes/images/icons/arrow-down.svg" />
+							</button>
+
+							<!-- DropDown Menu -->
+							<div class="dropdown-menu">
+								<!-- Nav Tabs -->
+								<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
+									<li><button class="btn-reset tab-button active" id="stripe-tab" data-toggle="tab" data-target="#stripe">Stripe</button></li>
+								</ul>
+
+								<!-- Nav Tabs Content -->
+								<div class="tab-content" id="dropdown-tab-content">
+									<div class="tab-pane fade show active" id="stripe">
+										<div class="stripe">
+											<!-- Search -->
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											<ul class="list">
+												<li>Bars</li>
+												<li>Chart</li>
+												<li>Lines</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+
+					{% include "templates/includes/navbar/navbar_login.html" %}
+				</ul>
+			</div>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block page_content %}
+	<!--  Stripes -->
+	<section class="stripes-section py-5">
+		<div class="container-2xl">
+			<div class="row">
+				<div class="col-12">
+					<div class="stripes-container">
+						<!-- Loader -->
+						<div class="loader"></div>
+						<!-- Stripe Svg -->
+						<div class="stripes w-100">
+							{{ stripes }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Download & Share Button -->
+			<div class="row mt-5">
+				<div class="col-12">
+					<div class="action-buttons text-right">
+						<button class="btn btn-secondary mr-2">
+							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
+							<a href="#">Download</a>
+						</button>
+
+						<button class="btn btn-secondary">
+							<img src="/assets/stripes/images/icons/share.svg" alt="share-button">
+							<a href="#">Share</a>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+<!-- Footer -->
+{% block footer %}
+	<footer>
+		<p>Interested in studying weather and climate? <a href="#">Take a look at our courses at the University of Reading</a></p>
+	</footer>
+{% endblock %}
+
+{% block script %}
+	{{ include_script("combobox.bundle.js") }}
+
+	<!-- Js -->
+	<script>
+		/* For Dropdown & Tabs */
+		$(document).ready(function() {
+			$('.dropdown-menu').each(function() {
+				$(this).on('click', function(e) {
+					e.stopPropagation();
+				});
+
+				$(this).on('click', function(e) {
+					if ($(e.target).hasClass('tab-button')) {
+						let target = $(e.target).data('target');
+
+						// Switch active tab
+						$(this).find('.tab-button').removeClass('active');
+						$(e.target).addClass('active');
+
+						// Switch tab content
+						$(this).find('.tab-pane').removeClass('show active');
+						$(target).addClass('show active');
+					}
+				});
+			});
+		});
+
+	/* Combobox Initializing */
+		const sync_region_comboboxes = (value, from) => {
+			if (country != from) {
+				country.set_value(value);
+			}
+			if (region != from) {
+				region.set_value(value);
+			}
+			if (city != from) {
+				city.set_value(value);
+			}
+		};
+
+		/* Global Combobox */
+		const country = new Combobox(".country", (value) => sync_region_comboboxes(value, country));
+		const region = new Combobox(".region", (value) => sync_region_comboboxes(value, region));
+		const city = new Combobox(".city", (value) => sync_region_comboboxes(value, city));
+
+		/* Stripes Combobox */
+		const stripe = new Combobox(".stripe");
+	</script>
+{% endblock %}
+
+
