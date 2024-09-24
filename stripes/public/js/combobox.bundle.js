@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 
 class Combobox {
-	constructor(wrapper, on_change) {
+	constructor(wrapper, on_change, fetching_data) {
 		this.wrapper = document.querySelector(wrapper);
 
 		this.stripes_container = document.querySelector(".stripes-container");
@@ -19,6 +19,8 @@ class Combobox {
 		this.current_focus = -1;
 
 		this.on_change = on_change;
+		this.fetching_data = fetching_data;
+		this.debounced_data_fetch = this.debounce(this.fetching_data, 200);
 		this.current_value = null;
 
 		this.initialize();
@@ -41,20 +43,30 @@ class Combobox {
 		this.render_items(this.list_items);
 	}
 
+	debounce(func, delay) {
+		let timer;
+		return function(...args) {
+			clearTimeout(timer);
+			timer = setTimeout(() => {func.apply(this, args)}, delay);
+		};
+	}
+
 	bind_events() {
-		this.search.addEventListener("input", () => this.filter_items());
-		this.search.addEventListener('keydown', (e) => this.handle_keyboard_controls(e));
+		this.search?.addEventListener("input", () => this.filter_items());
+		this.search?.addEventListener('keydown', (e) => this.handle_keyboard_controls(e));
 
 		// Input Focus
-		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
-		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
+		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search?.focus()}, 0));
+		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search?.focus()}, 0));
 
 		// Bind Item Selection
 		this.list_items.forEach(item => {
 			item.addEventListener("click", (e) => {
 				this.set_value(item.innerText);
 				this.on_change?.(this.current_value);
-				this.fetch_stripes();
+
+				// Call Fetching Data..
+				if (this.fetching_data) this.debounced_data_fetch(this.current_value)
 			});
 
 			// Stop Event Bubbling
@@ -66,7 +78,7 @@ class Combobox {
 	}
 
 	filter_items() {
-		const query = this.search.value.trim();
+		const query = this.search?.value.trim();
 		const results = query ? this.fuse.search(query).map(result => result.item.element) : this.list_items;
 		this.render_items(results);
 	}
@@ -114,7 +126,7 @@ class Combobox {
 		}
 
 		if (e.key === "Escape") {
-			this.search.blur();
+			this.search?.blur();
 
 			// Hide Drop Down
 			this.dropdown.classList.remove("show");
@@ -206,29 +218,6 @@ class Combobox {
 
 		// Hide the dropdown again after positioning
 		this.dropdown_menu.style.display = '';
-	}
-
-	fetch_stripes() {
-		// Add class to the container before fetching the result.
-		this.stripes_container.classList.add("loading");
-
-		setTimeout(() => {
-			frappe.call({
-				method: 'stripes.svg.get_stripes_svg',
-				args: {
-					from_date: "2018-01-01",
-					to_date: "2018-12-31",
-					monitor_region: this.current_value
-				},
-				callback: (response) => {
-					if (response.message) {
-						this.stripes.innerHTML = response.message;
-					}
-					// Remove class from the container after receiving the result.
-					this.stripes_container.classList.remove("loading");
-				}
-			});
-		}, 300);
 	}
 }
 

@@ -227,14 +227,47 @@
 			}
 		};
 
+		/* Fetching Stirpes */
+		const fetch_stripes = (value) => {
+			const stripes_container = document.querySelector(".stripes-container");
+			stripes_container?.classList.add("loading");
+
+			frappe.call({
+				method: 'stripes.svg.get_stripes_svg',
+				args: {
+					from_date: "2018-01-01",
+					to_date: "2018-12-31",
+					monitor_region: value
+				},
+				callback: (response) => {
+					if (response.message) {
+						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
+					}
+					stripes_container?.classList.remove("loading");
+				},
+				error: (error) => {
+					stripes_container?.classList.remove("loading");
+				}
+			});
+		}
+
 		/* Global Combobox */
-		const country = new Combobox(".country", (value) => sync_region_comboboxes(value, country));
-		const region = new Combobox(".region", (value) => sync_region_comboboxes(value, region));
-		const city = new Combobox(".city", (value) => sync_region_comboboxes(value, city));
+		const country = new Combobox(".country",
+			(value) => sync_region_comboboxes(value, country),
+			(value) => fetch_stripes(value)
+		);
+
+		const region = new Combobox(".region",
+			(value) => sync_region_comboboxes(value, region),
+			(value) => fetch_stripes(value)
+		);
+
+		const city = new Combobox(".city",
+			(value) => sync_region_comboboxes(value, city),
+			(value) => fetch_stripes(value)
+		);
 
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
 	</script>
 {% endblock %}
-
-
