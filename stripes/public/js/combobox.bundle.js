@@ -195,7 +195,7 @@ class Combobox {
 
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
 		const dropdown_width = this.dropdown_menu.offsetWidth;
-		const offset = dropdown_rect.right - 26;
+		const offset = dropdown_rect.right - 25;
 
 		const space_on_right = window.innerWidth - offset;
 		const space_on_left = dropdown_rect.left;
@@ -207,13 +207,9 @@ class Combobox {
 			this.dropdown_menu.style.left = 'unset';
 			this.dropdown_menu.style.right = '0';
 		} else {
-			if (space_on_right > space_on_left) {
-				this.dropdown_menu.style.left = '0';
-				this.dropdown_menu.style.right = 'unset';
-			} else {
-				this.dropdown_menu.style.left = 'unset';
-				this.dropdown_menu.style.right = '0';
-			}
+			this.dropdown_menu.style.left = '50%';
+			this.dropdown_menu.style.right = '0';
+			this.dropdown_menu.style.transform = 'translateX(-50%)';
 		}
 
 		// Hide the dropdown again after positioning
