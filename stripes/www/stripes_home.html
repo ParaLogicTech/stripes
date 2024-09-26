@@ -107,29 +107,13 @@
 
 							<!-- DropDown Menu -->
 							<div class="dropdown-menu">
-								<!-- Nav Tabs -->
-								<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
-									<li><button class="btn-reset tab-button active" id="stripe-tab" data-toggle="tab" data-target="#stripe">Stripe</button></li>
-								</ul>
-
-								<!-- Nav Tabs Content -->
-								<div class="tab-content" id="dropdown-tab-content">
-									<div class="tab-pane fade show active" id="stripe">
-										<div class="stripe">
-											<!-- Search -->
-											<div class="form-group d-flex align-item-center">
-												<img src="/assets/stripes/images/icons/search.svg" alt="search">
-												<input type="text" class="form-control search" placeholder="Search">
-											</div>
-
-											<!-- List -->
-											<ul class="list">
-												<li>Bars</li>
-												<li>Chart</li>
-												<li>Lines</li>
-											</ul>
-										</div>
-									</div>
+								<div class="stripe">
+									<!-- List -->
+									<ul class="list">
+										<li>Bars</li>
+										<li>Chart</li>
+										<li>Lines</li>
+									</ul>
 								</div>
 							</div>
 						</div>
@@ -165,7 +149,7 @@
 					<div class="action-buttons text-right">
 						<button class="btn btn-secondary mr-2">
 							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
-							<a href="#">Download</a>
+							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" download id="download">Download</a>
 						</button>
 
 						<button class="btn btn-secondary">
@@ -214,6 +198,12 @@
 			});
 		});
 
+		/* Download URL */
+		const set_download_url = (value) => {
+			const download = document.getElementById("download");
+			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
+		}
+
 	/* Combobox Initializing */
 		const sync_region_comboboxes = (value, from) => {
 			if (country != from) {
@@ -246,9 +236,14 @@
 					stripes_container?.classList.remove("loading");
 				},
 				error: (error) => {
-					stripes_container?.classList.remove("loading");
+					frappe.msgprint({
+						title: __('Error'),
+						message: __('Something went wrong. Please check your internet connection or try again.'),
+					})
 				}
 			});
+
+			set_download_url(value);
 		}
 
 		/* Global Combobox */
