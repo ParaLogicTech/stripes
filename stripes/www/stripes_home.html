@@ -175,6 +175,10 @@
 
 	<!-- Js -->
 	<script>
+		/* Added in globallly */
+		window.stripes_from_date = "2018-01-01";
+		window.stripes_to_date = "2018-12-31";
+
 		/* For Dropdown & Tabs */
 		$(document).ready(function() {
 			$('.dropdown-menu').each(function() {
@@ -225,8 +229,8 @@
 			frappe.call({
 				method: 'stripes.svg.get_stripes_svg',
 				args: {
-					from_date: "2018-01-01",
-					to_date: "2018-12-31",
+					from_date: stripes_from_date,
+					to_date: stripes_to_date,
 					monitor_region: value
 				},
 				callback: (response) => {
@@ -234,6 +238,7 @@
 						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
 					}
 					stripes_container?.classList.remove("loading");
+					set_download_url(value);
 				},
 				error: (error) => {
 					frappe.msgprint({
@@ -242,8 +247,6 @@
 					})
 				}
 			});
-
-			set_download_url(value);
 		}
 
 		/* Global Combobox */
