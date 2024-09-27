@@ -145,8 +145,11 @@ footer {
 	width: 100%;
 	padding: 15px;
 	border-top: 1px solid $border-color;
-	position: absolute;
-	bottom: 0;
+
+	@include media-breakpoint-down (sm) {
+		position: absolute;
+		bottom: 0;
+	}
 
 	p {
 		margin-bottom: 0;

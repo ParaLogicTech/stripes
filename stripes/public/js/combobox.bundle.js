@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 
 class Combobox {
-	constructor(wrapper, on_change, fetching_data) {
+	constructor(wrapper, on_change) {
 		this.wrapper = document.querySelector(wrapper);
 
 		this.stripes_container = document.querySelector(".stripes-container");
@@ -19,8 +19,6 @@ class Combobox {
 		this.current_focus = -1;
 
 		this.on_change = on_change;
-		this.fetching_data = fetching_data;
-		this.debounced_data_fetch = this.debounce(this.fetching_data, 200);
 		this.current_value = null;
 
 		this.initialize();
@@ -43,14 +41,6 @@ class Combobox {
 		this.render_items(this.list_items);
 	}
 
-	debounce(func, delay) {
-		let timer;
-		return function(...args) {
-			clearTimeout(timer);
-			timer = setTimeout(() => {func.apply(this, args)}, delay);
-		};
-	}
-
 	bind_events() {
 		this.search?.addEventListener("input", () => this.filter_items());
 		this.search?.addEventListener('keydown', (e) => this.handle_keyboard_controls(e));
@@ -64,9 +54,6 @@ class Combobox {
 			item.addEventListener("click", (e) => {
 				this.set_value(item.innerText);
 				this.on_change?.(this.current_value);
-
-				// Call Fetching Data..
-				if (this.fetching_data) this.debounced_data_fetch(this.current_value)
 			});
 
 			// Stop Event Bubbling

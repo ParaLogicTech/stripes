@@ -149,7 +149,7 @@
 					<div class="action-buttons text-right">
 						<button class="btn btn-secondary mr-2">
 							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
-							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" download id="download">Download</a>
+							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>Download</a>
 						</button>
 
 						<button class="btn btn-secondary">
@@ -200,7 +200,7 @@
 
 		/* Download URL */
 		const set_download_url = (value) => {
-			const download = document.getElementById("download");
+			const download = document.getElementById("stripes-download-link");
 			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
 		}
 
@@ -248,18 +248,15 @@
 
 		/* Global Combobox */
 		const country = new Combobox(".country",
-			(value) => sync_region_comboboxes(value, country),
-			(value) => fetch_stripes(value)
+			(value) => {sync_region_comboboxes(value, country), fetch_stripes(value)}
 		);
 
 		const region = new Combobox(".region",
-			(value) => sync_region_comboboxes(value, region),
-			(value) => fetch_stripes(value)
+			(value) => {sync_region_comboboxes(value, region), fetch_stripes(value)}
 		);
 
 		const city = new Combobox(".city",
-			(value) => sync_region_comboboxes(value, city),
-			(value) => fetch_stripes(value)
+			(value) => {sync_region_comboboxes(value, city), fetch_stripes(value)}
 		);
 
 		/* Stripes Combobox */
