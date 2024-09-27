@@ -203,7 +203,7 @@
 		});
 
 		/* Download URL */
-		const set_download_url = (value) => {
+		const set_stripes_download_url = (value) => {
 			const download = document.getElementById("stripes-download-link");
 			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
 		}
@@ -238,7 +238,7 @@
 						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
 					}
 					stripes_container?.classList.remove("loading");
-					set_download_url(value);
+					set_stripes_download_url(value);
 				},
 				error: (error) => {
 					frappe.msgprint({
