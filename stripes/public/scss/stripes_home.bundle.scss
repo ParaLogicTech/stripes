@@ -16,7 +16,8 @@
 	min-height: calc(100vh - 150px);
 
 	@include media-breakpoint-down (sm) {
-		min-height: calc(100vh - 199px);
+		min-height: unset;
+		background-color: unset;
 		display: flex;
 		align-items: center;
 	}
@@ -33,9 +34,14 @@
 		align-items: center;
 		justify-content: center;
 		position: relative;
+		z-index: 1;
 
 		@include media-breakpoint-down (sm) {
-			min-height: 50vh;
+			min-height: 42vh;
+		}
+
+		@media (max-height: 735px) {
+			min-height: unset;
 		}
 
 		.stripes {
@@ -66,6 +72,7 @@
 			opacity: 0;
 			transition: opacity .3s ease-out;
 			pointer-events: none;
+			z-index: -1;
 		}
 
 		.loader {
@@ -138,6 +145,11 @@ footer {
 	width: 100%;
 	padding: 15px;
 	border-top: 1px solid $border-color;
+
+	@include media-breakpoint-down (sm) {
+		position: absolute;
+		bottom: 0;
+	}
 
 	p {
 		margin-bottom: 0;

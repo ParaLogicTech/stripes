@@ -1,215 +1,278 @@
 .navbar.navbar-home {
 	min-height: 95px;
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-block: 9px;
+	padding: unset;
+	padding: 15px;
 
 	box-shadow: 0 0 15px rgb(0 0 0 / 8%);
 	border-bottom: 1px solid #b4bfd6;
 
+	@include media-breakpoint-down (sm) {
+		min-height: 77px;
+	}
+
 	.container-2xl {
 		@include media-breakpoint-down (sm) {
-			gap: 10px;
+			gap: 8px;
 		}
 	}
 
-	.logo {
-		font-size: 1.625rem;
-		font-weight: 400;
+	.navbar-brand {
+		.logo {
+			font-size: 1.625rem;
+			font-weight: 400;
+
+			@include media-breakpoint-down (sm) {
+				font-size: 1.4rem;
+			}
+		}
 
 		@include media-breakpoint-down (sm) {
-			font-size: 1.3rem;
+			display: block;
+			margin-right: unset;
+			padding: 0;
+			width: 100%;
+			text-align: center;
 		}
 	}
 
-	.navbar-nav {
-		margin-left: 24%;
-		gap: 15px;
+	.menu-icon {
+		width: 25px;
+		cursor: pointer;
+		user-select: none;
+	}
 
-		@include media-breakpoint-down (md) {
-			margin-left: unset;
-			justify-content: center;
-			flex-direction: row;
-		}
+	.nav-bar-menu {
+		.navbar-nav {
+			margin-left: 24%;
+			gap: 15px;
+			align-items: center;
 
-		@include media-breakpoint-down (sm) {
-			gap: 28px;
-		}
+			@include media-breakpoint-down (md) {
+				margin-left: unset;
+				justify-content: center;
+				flex-direction: row;
+			}
 
-		.nav-item {
 			@include media-breakpoint-down (sm) {
 				flex-direction: column;
-				gap: 10px;
 			}
 
-			span {
-				color: $light;
-				font-size: 1.1rem;
+			@include media-breakpoint-down (sm) {
+				gap: 7px;
+			}
 
-				@include media-breakpoint-down (md) {
-					font-size: 1rem;
-				}
-
+			.nav-item {
 				@include media-breakpoint-down (sm) {
-					font-size: .8rem;
+					flex-direction: column;
+					gap: 4px;
+				}
+
+				span {
+					color: $light;
+					font-size: 1.1rem;
+
+					@include media-breakpoint-down (md) {
+						font-size: 1rem;
+					}
+				}
+
+				.btn-login-area {
+					color: $black;
+				}
+
+				.dropdown {
+					.dropdown-toggle {
+						position: relative;
+						display: flex;
+						align-items: center;
+						column-gap: 9px;
+						justify-content: space-between;
+						padding: 8px 13px;
+						border: 1px solid rgba(32, 201, 150, 0.378) !important;
+
+						span {
+							color: #46526C;
+						}
+
+						&::after {
+							all: unset;
+						}
+					}
+
+					.dropdown-menu {
+						position: absolute;
+						width: 325px;
+						border: 1px solid $border-color;
+						border-radius: 8px;
+						padding-block: 3px;
+						padding-inline: 1px;
+						top: 53px;
+						transition: all 0.2s ease-out;
+
+						@include media-breakpoint-down (sm) {
+							width: 260px;
+							top: 46px;
+						}
+
+						@media (max-width: 325px) {
+							width: 235px;
+						}
+
+						.nav-tabs {
+							display: flex;
+							border: none;
+							justify-content: space-between;
+							column-gap: 1px;
+
+							li:has(.active) {
+								border-bottom: 2px solid $dark-green;
+							}
+
+							li {
+								width: 100%;
+								text-align: center;
+							}
+
+							.tab-button {
+								padding-top: 16px;
+								padding-bottom: 12px;
+								font-size: 1rem;
+								color: $dark-green;
+								font-weight: 600;
+							}
+						}
+
+						.tab-content {
+							padding: 15px;
+							padding-bottom: 8px;
+						}
+
+						.form-group {
+							position: relative;
+
+							img {
+								width: 17px;
+								position: absolute;
+								top: 50%;
+								left: 12px;
+								transform: translateY(-50%);
+							}
+
+							input {
+								border-color: $border-color;
+								background-color: transparent;
+								font-size: 1rem;
+								border-radius: 8px;
+								padding-left: 35px;
+								padding-block: 11px;
+								line-height: 0;
+								height: unset;
+
+								&:focus {
+									border-color: #a0a0a0;
+								}
+
+								&::placeholder {
+									color: #54575c;
+									font-size: .9rem;
+								}
+							}
+						}
+
+						.list {
+							padding: 0;
+							display: flex;
+							flex-direction: column;
+							overflow-y: auto;
+							max-height: 175px;
+							row-gap: 4px;
+							user-select: none;
+
+							h4 {
+								font-size: 1.1rem;
+								text-align: center;
+								padding: 6px;
+								padding-bottom: 8px;
+								margin: 0;
+							}
+
+							&::-webkit-scrollbar {
+								width: 10px;
+							}
+
+							&::-webkit-scrollbar-thumb {
+								background: #eaecf0;
+								border-radius: 10px;
+								transition: all 0.3s ease-out;
+							}
+
+							li {
+								list-style: none;
+								font-size: 1rem;
+								min-height: 42px;
+								padding-block: 10px;
+								padding-inline: 10px;
+								display: flex;
+								align-items: center;
+								font-weight: 500;
+								cursor: pointer;
+								border-radius: 6px;
+								margin-right: 10px;
+								justify-content: space-between;
+								align-items: center;
+
+								@include media-breakpoint-down (sm) {
+									font-size: .9rem;
+								}
+							}
+
+							li.active {
+								background-color: $green;
+							}
+
+							li.selected,
+							li:hover {
+								background-color: $green;
+							}
+						}
+
+						.stripe {
+							.list {
+								padding: 7px;
+								row-gap: 5px;
+
+								li {
+									margin-right: unset;
+									padding-block: 8px;
+									padding-inline: 8px;
+									border-bottom: 1px solid #e7e7e7;
+									border-radius: 0;
+									min-height: unset;
+
+									&:last-child {
+										border-bottom: unset;
+									}
+								}
+
+								li.selected,
+								li:hover {
+									background-color: $green;
+									border-radius: 0;
+								}
+							}
+						}
+					}
+
+					// Stripes DropDown
+					.dropdown-menu:has(.stripe) {
+						width: 200px;
+					}
 				}
 			}
 
-			.dropdown {
-				.dropdown-toggle {
-					position: relative;
-					display: flex;
-					align-items: center;
-					column-gap: 9px;
-					justify-content: space-between;
-					padding: 8px 13px;
-					border: 1px solid rgba(32, 201, 150, 0.378) !important;
-
-					span {
-						color: #46526C;
-					}
-
-					&::after {
-						all: unset;
-					}
-				}
-
+			.nav-item.logged-in {
 				.dropdown-menu {
-					position: absolute;
-					width: 325px;
-					border: 1px solid $border-color;
-					border-radius: 8px;
-
-					padding-block: 3px;
-					padding-inline: 1px;
-					top: 53px;
-					transition: all 0.2s ease-out;
-
-					@include media-breakpoint-down (sm) {
-						width: 245px;
-					}
-
-					@media (max-width: 325px) {
-						width: 225px;
-					}
-
-					.nav-tabs {
-						display: flex;
-						border: none;
-						justify-content: space-between;
-						column-gap: 1px;
-
-						li:has(.active) {
-							border-bottom: 2px solid $dark-green;
-						}
-
-						li {
-							width: 100%;
-							text-align: center;
-						}
-
-						.tab-button {
-							padding-top: 16px;
-							padding-bottom: 12px;
-							font-size: 1rem;
-							color: $dark-green;
-							font-weight: 600;
-						}
-					}
-
-					.tab-content {
-						padding: 15px;
-						padding-bottom: 8px;
-					}
-
-					.form-group {
-						position: relative;
-
-						img {
-							width: 17px;
-							position: absolute;
-							top: 50%;
-							left: 12px;
-							transform: translateY(-50%);
-						}
-
-						input {
-							border-color: $border-color;
-							background-color: transparent;
-							font-size: 1rem;
-							border-radius: 8px;
-							padding-left: 35px;
-							padding-block: 11px;
-							line-height: 0;
-							height: unset;
-
-							&:focus {
-								border-color: #a0a0a0;
-							}
-
-							&::placeholder {
-								color: #54575c;
-								font-size: .9rem;
-							}
-						}
-					}
-
-					.list {
-						padding: 0;
-						display: flex;
-						flex-direction: column;
-						overflow-y: auto;
-						max-height: 175px;
-						row-gap: 4px;
-						user-select: none;
-
-						h4 {
-							font-size: 1.1rem;
-							text-align: center;
-							padding: 6px;
-							padding-bottom: 8px;
-							margin: 0;
-						}
-
-						&::-webkit-scrollbar {
-							width: 10px;
-						}
-
-						&::-webkit-scrollbar-thumb {
-							background: #eaecf0;
-							border-radius: 10px;
-							transition: all 0.3s ease-out;
-						}
-
-						li {
-							list-style: none;
-							font-size: 1rem;
-							min-height: 42px;
-							padding-block: 10px;
-							padding-inline: 10px;
-							display: flex;
-							align-items: center;
-							font-weight: 500;
-							cursor: pointer;
-							border-radius: 6px;
-							margin-right: 10px;
-							justify-content: space-between;
-							align-items: center;
-
-							@include media-breakpoint-down (sm) {
-								font-size: .9rem;
-							}
-						}
-
-						li.active {
-							background-color: $green;
-						}
-
-						li.selected,
-						li:hover {
-							background-color: $green;
-						}
-					}
+					position: absolute !important;
 				}
 			}
 		}

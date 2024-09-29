@@ -42,19 +42,18 @@ class Combobox {
 	}
 
 	bind_events() {
-		this.search.addEventListener("input", () => this.filter_items());
-		this.search.addEventListener('keydown', (e) => this.handle_keyboard_controls(e));
+		this.search?.addEventListener("input", () => this.filter_items());
+		this.search?.addEventListener('keydown', (e) => this.handle_keyboard_controls(e));
 
 		// Input Focus
-		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
-		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search.focus()}, 0));
+		this.dropdown_menu.addEventListener("click", () => setTimeout(() => {this.search?.focus()}, 0));
+		this.dropdown_button.addEventListener("click", () => setTimeout(() => {this.search?.focus()}, 0));
 
 		// Bind Item Selection
 		this.list_items.forEach(item => {
 			item.addEventListener("click", (e) => {
 				this.set_value(item.innerText);
 				this.on_change?.(this.current_value);
-				this.fetch_stripes();
 			});
 
 			// Stop Event Bubbling
@@ -66,7 +65,7 @@ class Combobox {
 	}
 
 	filter_items() {
-		const query = this.search.value.trim();
+		const query = this.search?.value.trim();
 		const results = query ? this.fuse.search(query).map(result => result.item.element) : this.list_items;
 		this.render_items(results);
 	}
@@ -114,7 +113,7 @@ class Combobox {
 		}
 
 		if (e.key === "Escape") {
-			this.search.blur();
+			this.search?.blur();
 
 			// Hide Drop Down
 			this.dropdown.classList.remove("show");
@@ -183,7 +182,7 @@ class Combobox {
 
 		const dropdown_rect = this.dropdown.getBoundingClientRect();
 		const dropdown_width = this.dropdown_menu.offsetWidth;
-		const offset = dropdown_rect.right - 26;
+		const offset = dropdown_rect.right - 25;
 
 		const space_on_right = window.innerWidth - offset;
 		const space_on_left = dropdown_rect.left;
@@ -195,40 +194,13 @@ class Combobox {
 			this.dropdown_menu.style.left = 'unset';
 			this.dropdown_menu.style.right = '0';
 		} else {
-			if (space_on_right > space_on_left) {
-				this.dropdown_menu.style.left = '0';
-				this.dropdown_menu.style.right = 'unset';
-			} else {
-				this.dropdown_menu.style.left = 'unset';
-				this.dropdown_menu.style.right = '0';
-			}
+			this.dropdown_menu.style.left = '50%';
+			this.dropdown_menu.style.right = '0';
+			this.dropdown_menu.style.transform = 'translateX(-50%)';
 		}
 
 		// Hide the dropdown again after positioning
 		this.dropdown_menu.style.display = '';
-	}
-
-	fetch_stripes() {
-		// Add class to the container before fetching the result.
-		this.stripes_container.classList.add("loading");
-
-		setTimeout(() => {
-			frappe.call({
-				method: 'stripes.svg.get_stripes_svg',
-				args: {
-					from_date: "2018-01-01",
-					to_date: "2018-12-31",
-					monitor_region: this.current_value
-				},
-				callback: (response) => {
-					if (response.message) {
-						this.stripes.innerHTML = response.message;
-					}
-					// Remove class from the container after receiving the result.
-					this.stripes_container.classList.remove("loading");
-				}
-			});
-		}, 300);
 	}
 }
 
