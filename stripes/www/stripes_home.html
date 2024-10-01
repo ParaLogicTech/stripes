@@ -147,7 +147,7 @@
 			<div class="row mt-5">
 				<div class="col-12">
 					<div class="action-buttons text-right">
-						<button class="btn btn-secondary mr-2">
+						<button class="btn btn-secondary">
 							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
 							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>Download</a>
 						</button>
@@ -166,7 +166,7 @@
 <!-- Footer -->
 {% block footer %}
 	<footer>
-		<p>Interested in studying weather and climate? <a href="#">Take a look at our courses at the University of Reading</a></p>
+		<p>&copy; {{ frappe.utils.formatdate(frappe.utils.today(), "YYYY") }} ParaLogic, All rights reserved.</p>
 	</footer>
 {% endblock %}
 
@@ -208,7 +208,30 @@
 			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
 		}
 
-	/* Combobox Initializing */
+		// Update the URL based on filter selection.
+		const update_page_url = (value) => {
+			const new_url = value ? `/?stripes=${value.toLowerCase()}` : `/`;
+			window.history.pushState({ filter: value }, null, new_url);
+		}
+
+		// Remove the query on page reload.
+		window.addEventListener('DOMContentLoaded', () => {
+			const url = new URL(window.location.href);
+			if (url.searchParams.has('stripes')) {
+				url.searchParams.delete('stripes');
+				window.history.replaceState(null, null, url.pathname);
+			}
+		});
+
+		// Retrieve and handle the state when the user navigates back in history.
+		window.addEventListener('popstate', (e) => {
+			if (e.state && e.state.filter) {
+				fetch_stripes(e.state.filter);
+				sync_region_comboboxes(e.state.filter);
+			}
+		});
+
+		/* Combobox Initializing */
 		const sync_region_comboboxes = (value, from) => {
 			if (country != from) {
 				country.set_value(value);
@@ -238,7 +261,9 @@
 						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
 					}
 					stripes_container?.classList.remove("loading");
+
 					set_stripes_download_url(value);
+					update_page_url(value);
 				},
 				error: (error) => {
 					frappe.msgprint({
