@@ -4,6 +4,7 @@
 {% set no_breadcrumbs = True %}
 
 {% block style %}
+	<link rel="stylesheet" href="/assets/stripes/node_modules/tippy.js/dist/tippy.css">
 	{{ include_style("stripes_home.bundle.css") }}
 {% endblock %}
 
@@ -172,6 +173,7 @@
 
 {% block script %}
 	{{ include_script("combobox.bundle.js") }}
+	{{ include_script("tippy.bundle.js") }}
 
 	<!-- Js -->
 	<script>
@@ -210,25 +212,25 @@
 
 		// Update the URL based on filter selection.
 		const update_page_url = (value) => {
-			const new_url = value ? `/?stripes=${value.toLowerCase()}` : `/`;
-			window.history.pushState({ filter: value }, null, new_url);
-		}
-
-		// Remove the query on page reload.
-		window.addEventListener('DOMContentLoaded', () => {
-			const url = new URL(window.location.href);
-			if (url.searchParams.has('stripes')) {
-				url.searchParams.delete('stripes');
-				window.history.replaceState(null, null, url.pathname);
+			const new_url = value ? `/region/${value.toLowerCase()}` : `/`;
+			if (window.location.pathname !== new_url) {
+				window.history.pushState({ region: value }, null, new_url);
 			}
-		});
+		}
 
 		// Retrieve and handle the state when the user navigates back in history.
 		window.addEventListener('popstate', (e) => {
-			if (e.state && e.state.filter) {
-				fetch_stripes(e.state.filter);
-				sync_region_comboboxes(e.state.filter);
+			if (e.state && e.state.region) {
+				fetch_stripes(e.state.region);
+				sync_region_comboboxes(e.state.region);
 			}
+		});
+
+		// Remove the query on page reload.
+		window.addEventListener('DOMContentLoaded', (e) => {
+			const url = new URL(window.location.href);
+			const additional_url = url.pathname;
+			if(additional_url) window.history.replaceState(null, null, "/");
 		});
 
 		/* Combobox Initializing */
@@ -289,5 +291,45 @@
 
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
+
+		/* PopOver */
+		const rectangles = document.querySelectorAll(".stripes rect");
+		rectangles.forEach(rect => {
+			if(Number(rect.getAttribute("data-pollutant")) > 0) {
+				tippy(rect, {
+					content: () => {
+						const content = document.createElement('div');
+						content.innerHTML = `
+							<div class="popover-header-area">
+								<div class="date-area">
+									<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
+									<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
+								</div>
+							</div>
+							<div class="popover-body-area">
+								<div class="pollutant-area">
+									<div class="label">
+										<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
+										<span>PM2.5 (μg/m³)</span>
+									</div>
+									<h3 class="value">${rect.getAttribute("data-pollutant")}</h3>
+								</div>
+							</div>
+						`
+						return content;
+					},
+					placement: 'bottom',
+					trigger: 'mouseenter',
+					plugins: [followCursor],
+					followCursor: true,
+					duration: [0, 0],
+					offset: [0, 25],
+					animation: 'none',
+					theme: 'custom',
+					touch: true,
+					arrow: true,
+				});
+			}
+		});
 	</script>
 {% endblock %}
