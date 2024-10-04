@@ -167,7 +167,7 @@ class Combobox {
 				} else {
 					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
 					item.classList.add("selected");
-					this.dropdown_button.querySelector("span").textContent = this.current_value;
+					this.dropdown_button.querySelector("span").innerText = this.current_value;
 				}
 			} else {
 				item.classList.remove("selected");
