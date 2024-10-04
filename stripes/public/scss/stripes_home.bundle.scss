@@ -181,6 +181,10 @@ footer {
 	border-radius: 8px;
 	box-shadow: 0 0 15px rgba(31, 31, 31, 0.2);
 
+	@include media-breakpoint-down (sm) {
+		border-radius: 6px;
+	}
+
 	> .tippy-arrow::before {
 		transform: scale(1.2);
 	}
@@ -209,10 +213,18 @@ footer {
 		border-bottom: 1px solid #dbdfe7;
 		padding: 10px;
 
+		@include media-breakpoint-down (sm) {
+			padding: 8px;
+		}
+
 		h2 {
 			margin: 0 !important;
 			color: #344054;
 			font-size: 1.1rem;
+
+			@include media-breakpoint-down (sm) {
+				font-size: 1rem;
+			}
 		}
 
 		.date-area {
@@ -224,6 +236,10 @@ footer {
 
 	.popover-body-area {
 		padding: 10px;
+
+		@include media-breakpoint-down (sm) {
+			padding: 8px;
+		}
 
 		.pollutant-area {
 			display: flex;
@@ -240,6 +256,10 @@ footer {
 			display: flex;
 			gap: 4px;
 			align-items: center;
+
+			@include media-breakpoint-down (sm) {
+				font-size: .9rem;
+			}
 		}
 
 		.value {
@@ -249,10 +269,18 @@ footer {
 			color: #000;
 			margin-top: 2px !important;
 			margin-left: 3px !important;
+
+			@include media-breakpoint-down (sm) {
+				font-size: 1rem;
+			}
 		}
 	}
 
 	img {
 		width: 21px;
+
+		@include media-breakpoint-down (sm) {
+			width: 19px;
+		}
 	}
 }

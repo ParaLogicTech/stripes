@@ -204,6 +204,49 @@
 			});
 		});
 
+		/* Popover */
+		const initialize_popover = () => {
+			const rectangles = document.querySelectorAll(".stripes rect");
+			rectangles.forEach(rect => {
+				if(Number(rect.getAttribute("data-pollutant")) > 0) {
+					tippy(rect, {
+						content: () => {
+							const content = document.createElement('div');
+							content.innerHTML = `
+								<div class="popover-header-area">
+									<div class="date-area">
+										<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
+										<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
+									</div>
+								</div>
+								<div class="popover-body-area">
+									<div class="pollutant-area">
+										<div class="label">
+											<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
+											<span>PM2.5 (μg/m³)</span>
+										</div>
+										<h3 class="value">${rect.getAttribute("data-pollutant")}</h3>
+									</div>
+								</div>
+							`
+							return content;
+						},
+						placement: 'bottom',
+						trigger: 'mouseenter',
+						plugins: [followCursor],
+						followCursor: true,
+						duration: [0, 0],
+						offset: [0, 25],
+						animation: 'none',
+						theme: 'custom',
+						touch: true,
+						arrow: true,
+						allowHTML: true
+					});
+				}
+			});
+		}
+
 		/* Download URL */
 		const set_stripes_download_url = (value) => {
 			const download = document.getElementById("stripes-download-link");
@@ -266,6 +309,7 @@
 
 					set_stripes_download_url(value);
 					update_page_url(value);
+					initialize_popover();
 				},
 				error: (error) => {
 					frappe.msgprint({
@@ -292,44 +336,7 @@
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
 
-		/* PopOver */
-		const rectangles = document.querySelectorAll(".stripes rect");
-		rectangles.forEach(rect => {
-			if(Number(rect.getAttribute("data-pollutant")) > 0) {
-				tippy(rect, {
-					content: () => {
-						const content = document.createElement('div');
-						content.innerHTML = `
-							<div class="popover-header-area">
-								<div class="date-area">
-									<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
-									<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
-								</div>
-							</div>
-							<div class="popover-body-area">
-								<div class="pollutant-area">
-									<div class="label">
-										<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
-										<span>PM2.5 (μg/m³)</span>
-									</div>
-									<h3 class="value">${rect.getAttribute("data-pollutant")}</h3>
-								</div>
-							</div>
-						`
-						return content;
-					},
-					placement: 'bottom',
-					trigger: 'mouseenter',
-					plugins: [followCursor],
-					followCursor: true,
-					duration: [0, 0],
-					offset: [0, 25],
-					animation: 'none',
-					theme: 'custom',
-					touch: true,
-					arrow: true,
-				});
-			}
-		});
+		/* First time call */
+		initialize_popover();
 	</script>
 {% endblock %}
