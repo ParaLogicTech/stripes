@@ -220,11 +220,7 @@ footer {
 		h2 {
 			margin: 0 !important;
 			color: #344054;
-			font-size: 1.1rem;
-
-			@include media-breakpoint-down (sm) {
-				font-size: 1rem;
-			}
+			font-size: 1rem;
 		}
 
 		.date-area {
@@ -265,7 +261,7 @@ footer {
 		.value {
 			margin: 0 !important;
 			font-weight: 600;
-			font-size: 1.2rem;
+			font-size: 1.1rem;
 			color: #000;
 			margin-top: 2px !important;
 			margin-left: 3px !important;
@@ -277,10 +273,6 @@ footer {
 	}
 
 	img {
-		width: 21px;
-
-		@include media-breakpoint-down (sm) {
-			width: 19px;
-		}
+		width: 17px;
 	}
 }
