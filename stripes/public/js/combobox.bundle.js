@@ -11,7 +11,7 @@ class Combobox {
 		this.dropdown_menu = this.dropdown.querySelector(".dropdown-menu");
 		this.dropdown_button = this.dropdown.querySelector(".dropdown-toggle");
 
-		this.default_button_label = this.dropdown_button.querySelector("span").innerText;
+		this.default_label = this.dropdown_button.querySelector("span").dataset.label || "None";
 
 		this.search = this.wrapper.querySelector("input");
 		this.list_items_container = this.wrapper.querySelector("ul.list");
@@ -162,7 +162,7 @@ class Combobox {
 				if(is_selected) {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
-					this.dropdown_button.querySelector("span").innerText = this.default_button_label;
+					this.dropdown_button.querySelector("span").innerText = this.default_label;
 					this.current_value = null;
 				} else {
 					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
