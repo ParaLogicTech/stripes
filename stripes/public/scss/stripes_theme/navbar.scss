@@ -110,12 +110,12 @@
 						transition: all 0.2s ease-out;
 
 						@include media-breakpoint-down (sm) {
-							width: 260px;
+							width: 270px;
 							top: 46px;
 						}
 
 						@media (max-width: 325px) {
-							width: 235px;
+							width: 240px;
 						}
 
 						.nav-tabs {
@@ -134,11 +134,17 @@
 							}
 
 							.tab-button {
+								width: 100%;
 								padding-top: 16px;
 								padding-bottom: 12px;
 								font-size: 1rem;
 								color: $dark-green;
 								font-weight: 600;
+								transition: color .3s ease-out;
+
+								&:hover {
+									color: darken($dark-green, 6%);
+								}
 							}
 						}
 
@@ -273,6 +279,7 @@
 			.nav-item.logged-in {
 				.dropdown-menu {
 					position: absolute !important;
+					top: 45px;
 				}
 			}
 		}

@@ -50,7 +50,7 @@ def draw_stripes_svg(daily_aggregates, from_date, to_date):
 
 		x_offset = stripe_width * day
 
-		rectange = dw.Rectangle(x_offset, 0, stripe_width, height, fill=color)
+		rectange = dw.Rectangle(x_offset, 0, stripe_width, height, fill=color, data_date=current_date, data_pollutant=pollutant_value)
 		group.append(rectange)
 
 	drawing.render_width = '100%'

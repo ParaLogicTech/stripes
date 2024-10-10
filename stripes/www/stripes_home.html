@@ -4,6 +4,7 @@
 {% set no_breadcrumbs = True %}
 
 {% block style %}
+	<link rel="stylesheet" href="/assets/stripes/node_modules/tippy.js/dist/tippy.css">
 	{{ include_style("stripes_home.bundle.css") }}
 {% endblock %}
 
@@ -147,7 +148,7 @@
 			<div class="row mt-5">
 				<div class="col-12">
 					<div class="action-buttons text-right">
-						<button class="btn btn-secondary mr-2">
+						<button class="btn btn-secondary">
 							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
 							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>Download</a>
 						</button>
@@ -166,12 +167,13 @@
 <!-- Footer -->
 {% block footer %}
 	<footer>
-		<p>Interested in studying weather and climate? <a href="#">Take a look at our courses at the University of Reading</a></p>
+		<p>&copy; {{ frappe.utils.formatdate(frappe.utils.today(), "YYYY") }} ParaLogic, All rights reserved.</p>
 	</footer>
 {% endblock %}
 
 {% block script %}
 	{{ include_script("combobox.bundle.js") }}
+	{{ include_script("tippy.bundle.js") }}
 
 	<!-- Js -->
 	<script>
@@ -202,13 +204,79 @@
 			});
 		});
 
+		/* Popover */
+		const initialize_popover = () => {
+			const rectangles = document.querySelectorAll(".stripes rect");
+			rectangles.forEach(rect => {
+				if(Number(rect.getAttribute("data-pollutant")) > 0) {
+					tippy(rect, {
+						content: () => {
+							const content = document.createElement('div');
+							content.innerHTML = `
+								<div class="popover-header-area">
+									<div class="date-area">
+										<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
+										<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
+									</div>
+								</div>
+								<div class="popover-body-area">
+									<div class="pollutant-area">
+										<div class="label">
+											<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
+											<span>PM2.5 (μg/m³)</span>
+										</div>
+										<h3 class="value">${rect.getAttribute("data-pollutant")}</h3>
+									</div>
+								</div>
+							`
+							return content;
+						},
+						placement: 'bottom',
+						trigger: 'mouseenter',
+						plugins: [followCursor],
+						followCursor: true,
+						duration: [0, 0],
+						offset: [0, 25],
+						animation: 'none',
+						theme: 'custom',
+						touch: true,
+						arrow: true,
+						allowHTML: true
+					});
+				}
+			});
+		}
+
 		/* Download URL */
 		const set_stripes_download_url = (value) => {
 			const download = document.getElementById("stripes-download-link");
 			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
 		}
 
-	/* Combobox Initializing */
+		// Update the URL based on filter selection.
+		const update_page_url = (value) => {
+			const new_url = value ? `/region/${value.toLowerCase()}` : `/`;
+			if (window.location.pathname !== new_url) {
+				window.history.pushState({ region: value }, null, new_url);
+			}
+		}
+
+		// Retrieve and handle the state when the user navigates back in history.
+		window.addEventListener('popstate', (e) => {
+			if (e.state && e.state.region) {
+				fetch_stripes(e.state.region);
+				sync_region_comboboxes(e.state.region);
+			}
+		});
+
+		// Remove the query on page reload.
+		window.addEventListener('DOMContentLoaded', (e) => {
+			const url = new URL(window.location.href);
+			const additional_url = url.pathname;
+			if(additional_url) window.history.replaceState(null, null, "/");
+		});
+
+		/* Combobox Initializing */
 		const sync_region_comboboxes = (value, from) => {
 			if (country != from) {
 				country.set_value(value);
@@ -238,7 +306,10 @@
 						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
 					}
 					stripes_container?.classList.remove("loading");
+
 					set_stripes_download_url(value);
+					update_page_url(value);
+					initialize_popover();
 				},
 				error: (error) => {
 					frappe.msgprint({
@@ -264,5 +335,8 @@
 
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
+
+		/* First time call */
+		initialize_popover();
 	</script>
 {% endblock %}
