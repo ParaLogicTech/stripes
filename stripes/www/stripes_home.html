@@ -24,7 +24,7 @@
 						<!-- Global -->
 						<div class="dropdown">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-								<span>Global</span>
+								<span data-label="Global">{{ selected_region }}</span>
 								<img src="/assets/stripes/images/icons/arrow-down.svg" />
 							</button>
 
@@ -102,7 +102,7 @@
 
 						<div class="dropdown">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" >
-								<span>Stripes</span>
+								<span data-label="Stripes">Stripes</span>
 								<img src="/assets/stripes/images/icons/arrow-down.svg" />
 							</button>
 
@@ -148,14 +148,16 @@
 			<div class="row mt-5">
 				<div class="col-12">
 					<div class="action-buttons text-right">
-						<button class="btn btn-secondary">
-							<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
-							<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>Download</a>
-						</button>
+						<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>
+							<button class="btn btn-secondary">
+								<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
+								<span>Download</span>
+							</button>
+						</a>
 
 						<button class="btn btn-secondary">
 							<img src="/assets/stripes/images/icons/share.svg" alt="share-button">
-							<a href="#">Share</a>
+							<span>Share</span>
 						</button>
 					</div>
 				</div>
@@ -255,11 +257,17 @@
 
 		// Update the URL based on filter selection.
 		const update_page_url = (value) => {
-			const new_url = value ? `/region/${value.toLowerCase()}` : `/`;
+			const new_url = value ? `/region/${encodeURIComponent(value)}` : `/`;
 			if (window.location.pathname !== new_url) {
 				window.history.pushState({ region: value }, null, new_url);
 			}
 		}
+
+		// Update the query on page reload.
+		window.addEventListener('load', (e) => {
+			const value = window.location.pathname.split("/")[2];
+			if (value) sync_region_comboboxes(value);
+		});
 
 		// Retrieve and handle the state when the user navigates back in history.
 		window.addEventListener('popstate', (e) => {
@@ -267,13 +275,6 @@
 				fetch_stripes(e.state.region);
 				sync_region_comboboxes(e.state.region);
 			}
-		});
-
-		// Remove the query on page reload.
-		window.addEventListener('DOMContentLoaded', (e) => {
-			const url = new URL(window.location.href);
-			const additional_url = url.pathname;
-			if(additional_url) window.history.replaceState(null, null, "/");
 		});
 
 		/* Combobox Initializing */

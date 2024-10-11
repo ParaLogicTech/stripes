@@ -220,11 +220,8 @@ footer {
 		h2 {
 			margin: 0 !important;
 			color: #344054;
-			font-size: 1.1rem;
-
-			@include media-breakpoint-down (sm) {
-				font-size: 1rem;
-			}
+			font-size: .95rem;
+			margin-top: 1px !important;
 		}
 
 		.date-area {
@@ -252,20 +249,16 @@ footer {
 			margin: 0 !important;
 			color: #47494b;
 			font-weight: 500;
-			font-size: 1rem;
+			font-size: .95rem;
 			display: flex;
 			gap: 4px;
 			align-items: center;
-
-			@include media-breakpoint-down (sm) {
-				font-size: .9rem;
-			}
 		}
 
 		.value {
 			margin: 0 !important;
 			font-weight: 600;
-			font-size: 1.2rem;
+			font-size: 1.1rem;
 			color: #000;
 			margin-top: 2px !important;
 			margin-left: 3px !important;
@@ -277,10 +270,7 @@ footer {
 	}
 
 	img {
-		width: 21px;
-
-		@include media-breakpoint-down (sm) {
-			width: 19px;
-		}
+		width: 16.8px;
+		vertical-align: middle;
 	}
 }
