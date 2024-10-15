@@ -112,8 +112,8 @@
 									<!-- List -->
 									<ul class="list">
 										<li>Bars</li>
+										<li>Stripes</li>
 										<li>Chart</li>
-										<li>Lines</li>
 									</ul>
 								</div>
 							</div>
@@ -210,42 +210,40 @@
 		const initialize_popover = () => {
 			const rectangles = document.querySelectorAll(".stripes rect");
 			rectangles.forEach(rect => {
-				if(Number(rect.getAttribute("data-pollutant")) > 0) {
-					tippy(rect, {
-						content: () => {
-							const content = document.createElement('div');
-							content.innerHTML = `
-								<div class="popover-header-area">
-									<div class="date-area">
-										<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
-										<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
-									</div>
+				tippy(rect, {
+					content: () => {
+						const content = document.createElement('div');
+						content.innerHTML = `
+							<div class="popover-header-area">
+								<div class="date-area">
+									<img src="/assets/stripes/images/icons/calendar.svg" alt="date-icon">
+									<h2 class="date">${frappe.format(rect.getAttribute('data-date'), {fieldtype: 'Date'})}</h2>
 								</div>
-								<div class="popover-body-area">
-									<div class="pollutant-area">
-										<div class="label">
-											<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
-											<span>PM2.5 (μg/m³)</span>
-										</div>
-										<h3 class="value">${rect.getAttribute("data-pollutant")}</h3>
+							</div>
+							<div class="popover-body-area">
+								<div class="pollutant-area">
+									<div class="label">
+										<img src="/assets/stripes/images/icons/pollutant.svg" alt="pollutant-icon">
+										<span>PM2.5 (μg/m³)</span>
 									</div>
+									<h3 class="value">${rect.getAttribute("data-pollutant") ?? "N/A"}</h3>
 								</div>
-							`
-							return content;
-						},
-						placement: 'bottom',
-						trigger: 'mouseenter',
-						plugins: [followCursor],
-						followCursor: true,
-						duration: [0, 0],
-						offset: [0, 25],
-						animation: 'none',
-						theme: 'custom',
-						touch: true,
-						arrow: true,
-						allowHTML: true
-					});
-				}
+							</div>
+						`
+						return content;
+					},
+					placement: 'bottom',
+					trigger: 'mouseenter',
+					plugins: [followCursor],
+					followCursor: true,
+					duration: [0, 0],
+					offset: [0, 25],
+					animation: 'none',
+					theme: 'custom',
+					touch: true,
+					arrow: true,
+					allowHTML: true
+				});
 			});
 		}
 

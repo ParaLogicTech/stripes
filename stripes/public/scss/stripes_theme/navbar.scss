@@ -244,13 +244,12 @@
 
 						.stripe {
 							.list {
-								padding: 7px;
-								row-gap: 5px;
+								row-gap: 0;
+								max-height: unset;
 
 								li {
 									margin-right: unset;
-									padding-block: 8px;
-									padding-inline: 8px;
+									padding: 10px 12px;
 									border-bottom: 1px solid #e7e7e7;
 									border-radius: 0;
 									min-height: unset;
@@ -260,10 +259,17 @@
 									}
 								}
 
+								li:last-child.selected,
+								li:last-child:hover {
+									border-bottom-left-radius: 6px;
+									border-bottom-right-radius: 6px;
+								}
+
 								li.selected,
 								li:hover {
 									background-color: $green;
-									border-radius: 0;
+									border-top-left-radius: 6px;
+									border-top-right-radius: 6px;
 								}
 							}
 						}
@@ -272,6 +278,7 @@
 					// Stripes DropDown
 					.dropdown-menu:has(.stripe) {
 						width: 200px;
+						padding: 0;
 					}
 				}
 			}
