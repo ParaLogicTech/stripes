@@ -31,7 +31,7 @@ frappe.ui.form.on('Stripes Generator', {
 
 		frm.events.set_message(frm, "Loading...");
 		return frappe.call({
-			method: "stripes.svg.get_stripes_svg",
+			method: "stripes.image.get_stripes_svg",
 			args: {
 				from_date: frm.doc.from_date,
 				to_date: frm.doc.to_date,

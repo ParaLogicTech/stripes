@@ -4,7 +4,9 @@ from frappe.utils import cint, date_diff, getdate, add_days, cstr, flt, format_d
 from aqp.air_quality.doctype.reading_aggregate.reading_aggregate import get_daily_reading_aggregates
 from aqp.air_quality.doctype.monitor_region.monitor_region import get_root_region
 from dateutil import relativedelta
+from werkzeug.utils import send_file
 import drawsvg as dw
+import io
 
 
 @frappe.whitelist(allow_guest=True)
@@ -12,20 +14,54 @@ def get_stripes_svg_image(from_date, to_date, monitor_region=None):
 	monitor_region = validate_monitor_region(monitor_region)
 	file_name = get_file_name(from_date, to_date, monitor_region)
 
-	frappe.response.filecontent = get_stripes_svg(from_date, to_date, monitor_region=monitor_region)
+	output = get_stripes_svg(from_date, to_date, monitor_region=monitor_region)
+
+	frappe.response.filecontent = output
 	frappe.response.filename = f"{file_name}.svg"
 	frappe.response.type = "download"
 	frappe.response.display_content_as = "inline"
 
 
 @frappe.whitelist(allow_guest=True)
+def get_stripes_png_image(from_date, to_date, monitor_region=None):
+	monitor_region = validate_monitor_region(monitor_region)
+	file_name = get_file_name(from_date, to_date, monitor_region)
+
+	output = get_stripes_png(from_date, to_date, monitor_region=monitor_region)
+
+	return send_file(
+		output,
+		environ=frappe.local.request.environ,
+		mimetype="image/png",
+		download_name=f"{file_name}.png",
+	)
+
+
+@frappe.whitelist(allow_guest=True)
 def get_stripes_svg(from_date, to_date, monitor_region=None):
 	monitor_region = validate_monitor_region(monitor_region)
 	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
-	return draw_stripes_svg(daily_averages, from_date, to_date)
+
+	drawing = draw_stripes(daily_averages, from_date, to_date)
+	drawing.render_width = '100%'
+	drawing.render_height = '100%'
+	return drawing.as_svg()
 
 
-def draw_stripes_svg(daily_aggregates, from_date, to_date):
+def get_stripes_png(from_date, to_date, monitor_region=None):
+	monitor_region = validate_monitor_region(monitor_region)
+	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
+
+	output = io.BytesIO()
+
+	drawing = draw_stripes(daily_averages, from_date, to_date)
+	drawing.save_png(output)
+	output.seek(0)
+
+	return output
+
+
+def draw_stripes(daily_aggregates, from_date, to_date):
 	from_date = getdate(from_date)
 	to_date = getdate(to_date)
 	if to_date < from_date:
@@ -53,9 +89,7 @@ def draw_stripes_svg(daily_aggregates, from_date, to_date):
 		rectange = dw.Rectangle(x_offset, 0, stripe_width, height, fill=color, data_date=current_date, data_pollutant=pollutant_value)
 		group.append(rectange)
 
-	drawing.render_width = '100%'
-	drawing.render_height = '100%'
-	return drawing.as_svg()
+	return drawing
 
 
 def pm_2_5_to_color(pollutant_value):

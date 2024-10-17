@@ -1,5 +1,5 @@
 import frappe
-from stripes.svg import get_stripes_svg
+from stripes.image import get_stripes_svg
 
 def get_context(context):
 	# Extract the region from the URL path

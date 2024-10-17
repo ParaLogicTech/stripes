@@ -4,7 +4,7 @@
 {% set no_breadcrumbs = True %}
 
 {%- block meta_block -%}
-	<meta property="og:image" content="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" />
+	<meta property="og:image" content="/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" />
 {%- endblock %}
 
 {% block style %}
@@ -153,7 +153,7 @@
 				<div class="col-12">
 					<div class="action-buttons text-right">
 						<!-- Download -->
-						<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>
+						<a href="/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>
 							<button class="btn btn-secondary">
 								<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
 								<span>Download</span>
@@ -300,7 +300,7 @@
 		/* Download URL */
 		const set_stripes_download_url = (value) => {
 			const download = document.getElementById("stripes-download-link");
-			download.setAttribute("href", `/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
+			download.setAttribute("href", `/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
 		}
 
 		// Update the URL based on filter selection.
@@ -344,7 +344,7 @@
 			stripes_container?.classList.add("loading");
 
 			frappe.call({
-				method: 'stripes.svg.get_stripes_svg',
+				method: 'stripes.image.get_stripes_svg',
 				args: {
 					from_date: stripes_from_date,
 					to_date: stripes_to_date,
