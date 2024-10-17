@@ -410,7 +410,6 @@
 		/* Share */
 		const share_text = encodeURIComponent("Check this out!");
 		const share_url = encodeURIComponent(window.location.href);
-		const og_url = document.querySelector('meta[property="og:url"]');
 		const element = document.querySelectorAll(".social-icons-area a");
 		for (let d of element) {
 			social_site = d.getAttribute("data-share");
@@ -435,6 +434,5 @@
 				d.setAttribute("href", `mailto:?subject=${share_text}&body=${share_text} ${share_url}`)
 			}
 		}
-		og_url.setAttribute('content', window.location.href);
 	</script>
 {% endblock %}
