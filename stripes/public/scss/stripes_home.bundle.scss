@@ -274,3 +274,63 @@ footer {
 		vertical-align: middle;
 	}
 }
+
+/* Sharing Modal */
+#sharing-modal {
+	.social-icons-area {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32px;
+
+		img {
+			width: 37px;
+			transition: transform .2s ease-in-out;
+
+			&:hover {
+				transform: scale(1.1);
+			}
+		}
+	}
+
+	.page-url-section {
+		.form-control {
+			background-color: #fff;
+			padding: 15px 11px;
+			font-size: .94rem;
+		}
+
+		.copy-icon {
+			position: absolute;
+			width: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 10px;
+			cursor: pointer;
+		}
+
+		&::before {
+			content: "Copied";
+			position: absolute;
+			top: -21px;
+			right: -2px;
+			display: block;
+			background-color: rgb(219, 219, 219);
+			box-shadow: 0 0 2px rgba(0, 0, 0, .2);
+			padding: 4px;
+			z-index: 1;
+			font-size: 0.7rem;
+			border-radius: 3px;
+			transform: translateY(15px);
+			opacity: 0;
+			pointer-events: none;
+			transition: all .2s ease-in-out;
+		}
+
+		&:has(.copy-icon.active)::before {
+			content: "Copied";
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+}

@@ -3,6 +3,10 @@
 {% set full_width = True %}
 {% set no_breadcrumbs = True %}
 
+{%- block meta_block -%}
+	<meta property="og:image" content="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" />
+{%- endblock %}
+
 {% block style %}
 	<link rel="stylesheet" href="/assets/stripes/node_modules/tippy.js/dist/tippy.css">
 	{{ include_style("stripes_home.bundle.css") }}
@@ -148,6 +152,7 @@
 			<div class="row mt-5">
 				<div class="col-12">
 					<div class="action-buttons text-right">
+						<!-- Download -->
 						<a href="/api/method/stripes.svg.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>
 							<button class="btn btn-secondary">
 								<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
@@ -155,10 +160,55 @@
 							</button>
 						</a>
 
-						<button class="btn btn-secondary">
+						<!-- Share -->
+						<button class="btn btn-secondary" id="share-button" data-toggle="modal" data-target="#sharing-modal">
 							<img src="/assets/stripes/images/icons/share.svg" alt="share-button">
 							<span>Share</span>
 						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Share Modal -->
+		<div class="modal fade" id="sharing-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header d-flex align-items-center">
+						<h5 class="modal-title" id="exampleModalLongTitle">Share</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none;">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="social-icons-area">
+							<a data-share="facebook" target="_blank">
+								<img src="/assets/stripes/images/icons/facebook.svg" alt="facebook">
+							</a>
+
+							<a data-share="whatsapp" target="_blank">
+								<img src="/assets/stripes/images/icons/whatsapp.svg" alt="whatsapp">
+							</a>
+
+							<a data-share="linkedin" target="_blank">
+								<img src="/assets/stripes/images/icons/linkedin.svg" alt="linkedin">
+							</a>
+
+							<a data-share="x" target="_blank">
+								<img src="/assets/stripes/images/icons/x.svg" alt="twitter/x">
+							</a>
+
+							<a data-share="mail" target="_blank">
+								<img src="/assets/stripes/images/icons/email.svg" alt="mail">
+							</a>
+						</div>
+
+						<div class="page-url-section mt-5 position-relative">
+							<div class="form-group postion-relative mb-0">
+								<input type="text" class="form-control contain-url" readonly>
+								<img src="/assets/stripes/images/icons/copy.svg" data-clipboard-target=".page-url-section input" class="copy-icon" alt="copy">
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -175,7 +225,7 @@
 
 {% block script %}
 	{{ include_script("combobox.bundle.js") }}
-	{{ include_script("tippy.bundle.js") }}
+	{{ include_script("library.bundle.js") }}
 
 	<!-- Js -->
 	<script>
@@ -339,5 +389,52 @@
 
 		/* First time call */
 		initialize_popover();
+
+		/* Copy Clipboard */
+		const share_button = document.getElementById("share-button");
+		share_button.onclick = () => {
+			document.querySelector(".contain-url").value = window.location.href;
+		};
+
+		const copy_icon = document.querySelector(".copy-icon");
+		const clipboard = new ClipboardJS('.copy-icon');
+
+		clipboard.on('success', (e) => {
+			copy_icon.classList.add("active");
+
+			setTimeout(() => {
+				copy_icon.classList.remove("active");
+			}, 2000);
+		});
+
+		/* Share */
+		const share_text = encodeURIComponent("Check this out!");
+		const share_url = encodeURIComponent(window.location.href);
+		const og_url = document.querySelector('meta[property="og:url"]');
+		const element = document.querySelectorAll(".social-icons-area a");
+		for (let d of element) {
+			social_site = d.getAttribute("data-share");
+
+			if (social_site == "facebook") {
+				d.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${share_url}`)
+			}
+
+			if (social_site == "whatsapp") {
+				d.setAttribute("href", `https://api.whatsapp.com/send?text=${share_text} ${share_url}`)
+			}
+
+			if (social_site == "linkedin") {
+				d.setAttribute("href", `https://www.linkedin.com/sharing/share-offsite/?url=${share_url}`)
+			}
+
+			if (social_site == "x") {
+				d.setAttribute("href", `https://twitter.com/intent/tweet?url=${share_url}&text=${share_text}`)
+			}
+
+			if (social_site == "mail") {
+				d.setAttribute("href", `mailto:?subject=${share_text}&body=${share_text} ${share_url}`)
+			}
+		}
+		og_url.setAttribute('content', window.location.href);
 	</script>
 {% endblock %}
