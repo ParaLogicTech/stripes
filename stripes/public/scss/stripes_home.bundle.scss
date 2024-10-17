@@ -59,6 +59,14 @@
 				border-radius: 1px;
 				background-color: unset;
 			}
+
+			rect {
+				&:hover {
+					stroke: #073a30;
+					stroke-width: 1.6px;
+					stroke-dasharray: 3px 2px;
+				}
+			}
 		}
 
 		&::before {
