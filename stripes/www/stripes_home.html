@@ -3,13 +3,20 @@
 {% set full_width = True %}
 {% set no_breadcrumbs = True %}
 
-{%- block meta_block -%}
-	<meta property="og:image" content="/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" />
-{%- endblock %}
-
 {% block style %}
 	<link rel="stylesheet" href="/assets/stripes/node_modules/tippy.js/dist/tippy.css">
 	{{ include_style("stripes_home.bundle.css") }}
+{% endblock %}
+
+{%- block meta_block -%}
+{%- for name in metatags %}
+{%- set content = metatags.get(name, '') -%}
+{%- if name in ('image', 'og:image', 'twitter:image') %}
+	<meta {% if name.startswith('og:') %}property="{{ name }}"{% else %}name="{{ name }}"{% endif %} content="{{ content | striptags }}">
+{%- elif content %}
+	<meta {% if name.startswith('og:') %}property="{{ name }}"{% else %}name="{{ name }}"{% endif %} content="{{ content | striptags | escape }}">
+{%- endif %}
+{%- endfor -%}
 {% endblock %}
 
 {% block navbar %}
@@ -115,8 +122,8 @@
 								<div class="stripe">
 									<!-- List -->
 									<ul class="list">
-										<li>Bars</li>
 										<li>Stripes</li>
+										<li>Bars</li>
 										<li>Chart</li>
 									</ul>
 								</div>
@@ -142,7 +149,7 @@
 						<div class="loader"></div>
 						<!-- Stripe Svg -->
 						<div class="stripes w-100">
-							{{ stripes }}
+							{{ stripes_svg }}
 						</div>
 					</div>
 				</div>
@@ -153,7 +160,7 @@
 				<div class="col-12">
 					<div class="action-buttons text-right">
 						<!-- Download -->
-						<a href="/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31" id="stripes-download-link" download>
+						<a href="{{ image_url }}" id="stripes-download-link" download>
 							<button class="btn btn-secondary">
 								<img src="/assets/stripes/images/icons/download.svg" alt="download-button">
 								<span>Download</span>
@@ -225,13 +232,14 @@
 
 {% block script %}
 	{{ include_script("combobox.bundle.js") }}
-	{{ include_script("library.bundle.js") }}
+	{{ include_script("stripes.bundle.js") }}
 
 	<!-- Js -->
 	<script>
 		/* Added in globallly */
-		window.stripes_from_date = "2018-01-01";
-		window.stripes_to_date = "2018-12-31";
+		window.image_api = "{{ image_api|e }}";
+		window.stripes_from_date = "{{ from_date }}";
+		window.stripes_to_date = "{{ to_date }}";
 
 		/* For Dropdown & Tabs */
 		$(document).ready(function() {
@@ -298,9 +306,18 @@
 		}
 
 		/* Download URL */
-		const set_stripes_download_url = (value) => {
-			const download = document.getElementById("stripes-download-link");
-			download.setAttribute("href", `/api/method/stripes.image.get_stripes_svg_image?from_date=2018-01-01&to_date=2018-12-31&monitor_region=${value}`);
+		const update_stripes_download_url = (region) => {
+			const download_el = document.getElementById("stripes-download-link");
+			let download_url = get_image_url(region);
+			download_el.setAttribute("href", download_url);
+		}
+
+		const get_image_url = (region) => {
+			let download_url = `${image_api}?from_date=${stripes_from_date}&to_date=${stripes_to_date}`;
+			if (region) {
+				download_url += `&monitor_region=${encodeURIComponent(region)}`;
+			}
+			return download_url;
 		}
 
 		// Update the URL based on filter selection.
@@ -313,7 +330,7 @@
 
 		// Update the query on page reload.
 		window.addEventListener('load', (e) => {
-			const value = window.location.pathname.split("/")[2];
+			const value = decodeURIComponent(window.location.pathname.split("/")[2]);
 			if (value) sync_region_comboboxes(value);
 		});
 
@@ -356,7 +373,7 @@
 					}
 					stripes_container?.classList.remove("loading");
 
-					set_stripes_download_url(value);
+					update_stripes_download_url(value);
 					update_page_url(value);
 					initialize_popover();
 				},
@@ -429,7 +446,7 @@
 			}
 
 			if (social_site == "mail") {
-				d.setAttribute("href", `mailto:?subject=${share_text}&body=${share_text} ${share_url}`)
+				d.setAttribute("href", `mailto:?subject=Pollution Stripes&body=${share_text} ${share_url}`)
 			}
 		}
 	</script>

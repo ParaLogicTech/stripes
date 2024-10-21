@@ -39,6 +39,7 @@ class Combobox {
 
 		this.bind_events();
 		this.render_items(this.list_items);
+		this.default_selected_in_view();
 	}
 
 	bind_events() {
@@ -173,6 +174,14 @@ class Combobox {
 				item.classList.remove("selected");
 				item.querySelector("img")?.remove();
 			}
+		}
+	}
+
+	default_selected_in_view () {
+		const default_item_selected = this.items.find(item => item.name === this.default_label);
+
+		if (default_item_selected) {
+			this.set_value(default_item_selected.name);
 		}
 	}
 
