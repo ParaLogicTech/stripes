@@ -305,6 +305,36 @@
 			});
 		}
 
+		/* Stripes Share */
+		const stripes_sharing = () => {
+			const share_text = encodeURIComponent("Check this out!");
+			const share_url = encodeURIComponent(window.location.href);
+			const element = document.querySelectorAll(".social-icons-area a");
+			for (let d of element) {
+				social_site = d.getAttribute("data-share");
+
+				if (social_site == "facebook") {
+					d.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${share_url}`)
+				}
+
+				if (social_site == "whatsapp") {
+					d.setAttribute("href", `https://api.whatsapp.com/send?text=${share_text} ${share_url}`)
+				}
+
+				if (social_site == "linkedin") {
+					d.setAttribute("href", `https://www.linkedin.com/sharing/share-offsite/?url=${share_url}`)
+				}
+
+				if (social_site == "x") {
+					d.setAttribute("href", `https://twitter.com/intent/tweet?url=${share_url}&text=${share_text}`)
+				}
+
+				if (social_site == "mail") {
+					d.setAttribute("href", `mailto:?subject=Pollution Stripes&body=${share_text} ${share_url}`)
+				}
+			}
+		}
+
 		/* Download URL */
 		const update_stripes_download_url = (region) => {
 			const download_el = document.getElementById("stripes-download-link");
@@ -375,6 +405,7 @@
 
 					update_stripes_download_url(value);
 					update_page_url(value);
+					stripes_sharing();
 					initialize_popover();
 				},
 				error: (error) => {
@@ -402,9 +433,6 @@
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
 
-		/* First time call */
-		initialize_popover();
-
 		/* Copy Clipboard */
 		const share_button = document.getElementById("share-button");
 		share_button.onclick = () => {
@@ -422,32 +450,8 @@
 			}, 2000);
 		});
 
-		/* Share */
-		const share_text = encodeURIComponent("Check this out!");
-		const share_url = encodeURIComponent(window.location.href);
-		const element = document.querySelectorAll(".social-icons-area a");
-		for (let d of element) {
-			social_site = d.getAttribute("data-share");
-
-			if (social_site == "facebook") {
-				d.setAttribute("href", `https://www.facebook.com/sharer/sharer.php?u=${share_url}`)
-			}
-
-			if (social_site == "whatsapp") {
-				d.setAttribute("href", `https://api.whatsapp.com/send?text=${share_text} ${share_url}`)
-			}
-
-			if (social_site == "linkedin") {
-				d.setAttribute("href", `https://www.linkedin.com/sharing/share-offsite/?url=${share_url}`)
-			}
-
-			if (social_site == "x") {
-				d.setAttribute("href", `https://twitter.com/intent/tweet?url=${share_url}&text=${share_text}`)
-			}
-
-			if (social_site == "mail") {
-				d.setAttribute("href", `mailto:?subject=Pollution Stripes&body=${share_text} ${share_url}`)
-			}
-		}
+		/* First time call */
+		initialize_popover();
+		stripes_sharing();
 	</script>
 {% endblock %}
