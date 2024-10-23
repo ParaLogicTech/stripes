@@ -240,7 +240,6 @@
 		window.image_api = "{{ image_api|e }}";
 		window.stripes_from_date = "{{ from_date }}";
 		window.stripes_to_date = "{{ to_date }}";
-		window.page_url = window.location.href;
 
 		/* For Dropdown & Tabs */
 		$(document).ready(function() {
@@ -307,9 +306,9 @@
 		}
 
 		/* Stripes Share */
-		const stripes_sharing = () => {
+		const update_sharing_url = () => {
 			const share_text = encodeURIComponent("Check this out!");
-			const share_url = page_url;
+			const share_url = window.location.href;
 			const element = document.querySelectorAll(".social-icons-area a");
 			for (let d of element) {
 				social_site = d.getAttribute("data-share");
@@ -334,11 +333,6 @@
 					d.setAttribute("href", `mailto:?subject=Pollution Stripes&body=${share_text} ${share_url}`)
 				}
 			}
-		}
-
-		const update_sharing_url = () => {
-			window.page_url = window.location.href;
-			stripes_sharing();
 		}
 
 		/* Download URL */
@@ -458,6 +452,6 @@
 
 		/* First time call */
 		initialize_popover();
-		stripes_sharing();
+		update_sharing_url();
 	</script>
 {% endblock %}
