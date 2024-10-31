@@ -547,7 +547,7 @@
 		});
 
 		const city = new Combobox(".city", (value) => {
-			sync_region_comboboxes(value, compare_region);
+			sync_region_comboboxes(value, city);
 			get_region();
 			fetch_region_stripes(value, get_compare_region());
 		});
