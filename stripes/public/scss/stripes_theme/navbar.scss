@@ -278,6 +278,62 @@
 						padding: 0;
 					}
 				}
+
+				// Visualize Compare Select Box
+				.visualize-compare-select-box {
+					button {
+						display: flex;
+						align-items: center;
+						border: 1px solid rgb(231, 231, 231);
+						padding: 8px 12px;
+						user-select: none;
+						position: relative;
+						cursor: pointer;
+						border-top-left-radius: 2px;
+						border-top-right-radius: 2px;
+						column-gap: 9px;
+					}
+
+					.options-container {
+						position: absolute;
+						top: 44.5px;
+						left: 0;
+						width: 100%;
+						padding: 0;
+						z-index: 2;
+						border: 1px solid rgb(231, 231, 231);
+						background-color: white;
+						border-top: unset;
+						visibility: hidden;
+						opacity: 0;
+						user-select: none;
+						transform: translateY(-10px);
+						transition: transform .1s ease-in-out, opacity .1s ease-out;
+						border-bottom-left-radius: 2px;
+						border-bottom-right-radius: 2px;
+
+						.option {
+							width: 100%;
+							list-style: none;
+							color: #46526C;
+							padding: 8px 12px;
+							cursor: pointer;
+
+							&:hover {
+								background-color: rgba(32, 201, 150, 0.378);
+							}
+						}
+					}
+
+					&.active {
+						.options-container {
+							visibility: visible;
+							opacity: 1;
+							user-select: auto;
+							transform: translateY(0);
+						}
+					}
+				}
 			}
 
 			.nav-item.logged-in {
@@ -293,4 +349,13 @@
 // For Login Page
 .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link.active {
 	color: $black;
+}
+
+// Comparison Mode
+.comparison {
+	display: none;
+}
+
+.comparison.active {
+	display: block;
 }

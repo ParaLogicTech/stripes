@@ -10,11 +10,12 @@ import io
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_svg_image(from_date, to_date, monitor_region=None):
-	monitor_region = validate_monitor_region(monitor_region)
-	file_name = get_file_name(from_date, to_date, monitor_region)
+def get_stripes_svg_image(from_date, to_date, region=None, compare_region=None):
+	region = validate_monitor_region(region, mandatory=True)
+	compare_region = validate_monitor_region(compare_region, mandatory=False)
+	file_name = get_file_name(from_date, to_date, region, compare_region)
 
-	output = get_stripes_svg(from_date, to_date, monitor_region=monitor_region)
+	output = get_stripes_svg(from_date, to_date, region=region, compare_region=compare_region)
 
 	frappe.response.filecontent = output
 	frappe.response.filename = f"{file_name}.svg"
@@ -23,11 +24,12 @@ def get_stripes_svg_image(from_date, to_date, monitor_region=None):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_png_image(from_date, to_date, monitor_region=None):
-	monitor_region = validate_monitor_region(monitor_region)
-	file_name = get_file_name(from_date, to_date, monitor_region)
+def get_stripes_png_image(from_date, to_date, region=None, compare_region=None):
+	region = validate_monitor_region(region, mandatory=True)
+	compare_region = validate_monitor_region(compare_region, mandatory=False)
+	file_name = get_file_name(from_date, to_date, region, compare_region)
 
-	output = get_stripes_png(from_date, to_date, monitor_region=monitor_region)
+	output = get_stripes_png(from_date, to_date, region=region, compare_region=compare_region)
 
 	return send_file(
 		output,
@@ -38,56 +40,85 @@ def get_stripes_png_image(from_date, to_date, monitor_region=None):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stripes_svg(from_date, to_date, monitor_region=None):
-	monitor_region = validate_monitor_region(monitor_region)
-	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
+def get_stripes_svg(from_date, to_date, region=None, compare_region=None):
+	region = validate_monitor_region(region, mandatory=True)
+	compare_region = validate_monitor_region(compare_region, mandatory=False)
 
-	drawing = draw_stripes(daily_averages, from_date, to_date)
+	drawing = draw_stripes(from_date, to_date, region=region, compare_region=compare_region)
 	drawing.render_width = '100%'
 	drawing.render_height = '100%'
 	return drawing.as_svg()
 
 
-def get_stripes_png(from_date, to_date, monitor_region=None):
-	monitor_region = validate_monitor_region(monitor_region)
-	daily_averages = get_daily_reading_aggregates(from_date, to_date, monitor_region=monitor_region)
+def get_stripes_png(from_date, to_date, region=None, compare_region=None):
+	region = validate_monitor_region(region, mandatory=True)
+	compare_region = validate_monitor_region(compare_region, mandatory=False)
 
 	output = io.BytesIO()
 
-	drawing = draw_stripes(daily_averages, from_date, to_date)
+	drawing = draw_stripes(from_date, to_date, region=region, compare_region=compare_region)
 	drawing.save_png(output)
 	output.seek(0)
 
 	return output
 
 
-def draw_stripes(daily_aggregates, from_date, to_date):
+def draw_stripes(from_date, to_date, region, compare_region=None):
 	from_date = getdate(from_date)
 	to_date = getdate(to_date)
 	if to_date < from_date:
 		frappe.throw(_("To Date cannot be before From Date"))
 
-	svg_width = 365 * 4
-	height = cint(svg_width / 2.5)
+	if not region:
+		frappe.throw_("Region not provided")
+
+	region_stripe_values = get_daily_reading_aggregates(from_date, to_date, monitor_region=region)
+
+	comparison_stripe_values = None
+	if compare_region:
+		comparison_stripe_values = get_daily_reading_aggregates(from_date, to_date, monitor_region=compare_region)
 
 	days = date_diff(to_date, from_date) + 1
+
+	svg_width = 365 * 4
 	stripe_width = cint(flt(svg_width / days, 0))
 
-	drawing = dw.Drawing(svg_width, height)  # Todo IDs
-	group = dw.Group()
-	drawing.append(group)
+	stripe_height = cint(svg_width / 2.5)
 
-	for day in range(days):
-		current_date = add_days(from_date, day)
-		date_dict = daily_aggregates.get(cstr(current_date)) or {}
+	svg_height = stripe_height
+	comparison_gap = 10
+	if comparison_stripe_values:
+		svg_height = svg_height * 2 + comparison_gap
 
-		pollutant_value = date_dict.get("pm_2_5")
-		color = pm_2_5_to_color(pollutant_value)
+	drawing = dw.Drawing(svg_width, svg_height)  # Todo IDs
 
-		x_offset = stripe_width * day
+	for i, region_values in enumerate((region_stripe_values, comparison_stripe_values)):
+		if not region_values:
+			continue
 
-		rectange = dw.Rectangle(x_offset, 0, stripe_width, height, fill=color, data_date=current_date, data_pollutant=pollutant_value)
-		group.append(rectange)
+		group = dw.Group()
+		drawing.append(group)
+
+		for day in range(days):
+			current_date = add_days(from_date, day)
+			date_dict = region_values.get(cstr(current_date)) or {}
+
+			pollutant_value = date_dict.get("pm_2_5")
+			color = pm_2_5_to_color(pollutant_value)
+
+			x_offset = stripe_width * day
+			y_offset = i * (stripe_height + comparison_gap)
+
+			rectange = dw.Rectangle(
+				x_offset,
+				y_offset,
+				stripe_width,
+				stripe_height,
+				fill=color,
+				data_date=current_date,
+				data_pollutant=pollutant_value
+			)
+			group.append(rectange)
 
 	return drawing
 
@@ -148,21 +179,23 @@ def pm_2_5_to_color(pollutant_value):
 		return "#212121"  # charcoal gray
 
 
-def validate_monitor_region(monitor_region):
-	if not monitor_region:
+def validate_monitor_region(monitor_region, mandatory=False):
+	if not monitor_region and mandatory:
 		monitor_region = get_root_region()
 
-	if not monitor_region:
+	if not monitor_region and mandatory:
 		frappe.throw(_("Monitor Region not provided"))
 
-	if not frappe.db.exists("Monitor Region", monitor_region, cache=True):
+	if monitor_region and not frappe.db.exists("Monitor Region", monitor_region, cache=True):
 		frappe.throw(_("Monitor Region {0} not found").format(monitor_region), exc=frappe.DoesNotExistError)
 
 	return monitor_region
 
 
-def get_file_name(from_date, to_date, monitor_region):
-	monitor_region = validate_monitor_region(monitor_region)
+def get_file_name(from_date, to_date, region, compare_region=None):
+	region = validate_monitor_region(region, mandatory=True)
+	compare_region = validate_monitor_region(compare_region, mandatory=False)
+
 	from_date = getdate(from_date)
 	to_date = getdate(to_date)
 
@@ -187,4 +220,6 @@ def get_file_name(from_date, to_date, monitor_region):
 		# Full date range
 		date_str = f"{format_date(from_date, 'yyyyMMdd')}-{format_date(to_date, 'yyyyMMdd')}"
 
-	return f"{monitor_region}_{date_str}"
+	compare_region_append = f"_{compare_region}" if compare_region else ""
+
+	return f"{region}{compare_region_append}_{date_str}"
