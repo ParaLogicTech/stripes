@@ -61,7 +61,7 @@
 			.nav-item {
 				@include media-breakpoint-down (sm) {
 					flex-direction: column;
-					gap: 4px;
+					gap: 6px;
 				}
 
 				span {
@@ -353,9 +353,15 @@
 
 // Comparison Mode
 .comparison {
-	display: none;
+	visibility: hidden;
+	position: absolute;
+	opacity: 0;
+	user-select: none;
 }
 
 .comparison.active {
-	display: block;
+	visibility: visible;
+	position: relative;
+	opacity: 1;
+	user-select: unset;
 }
