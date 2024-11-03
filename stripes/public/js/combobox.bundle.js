@@ -10,8 +10,8 @@ class Combobox {
 		this.dropdown = this.wrapper.closest(".dropdown");
 		this.dropdown_menu = this.dropdown.querySelector(".dropdown-menu");
 		this.dropdown_button = this.dropdown.querySelector(".dropdown-toggle");
-
-		this.default_label = this.dropdown_button.querySelector("span").dataset.label || "None";
+		this.button_label = this.dropdown_button.querySelector("span");
+		this.default_label = this.dropdown_button.querySelector("span").dataset.default || "None";
 
 		this.search = this.wrapper.querySelector("input");
 		this.list_items_container = this.wrapper.querySelector("ul.list");
@@ -39,7 +39,7 @@ class Combobox {
 
 		this.bind_events();
 		this.render_items(this.list_items);
-		this.default_selected_in_view();
+		this.set_selected_item_onload();
 	}
 
 	bind_events() {
@@ -54,7 +54,7 @@ class Combobox {
 		this.list_items.forEach(item => {
 			item.addEventListener("click", (e) => {
 				this.set_value(item.innerText);
-				this.on_change?.(this.current_value);
+				this.trigger_callback();
 			});
 
 			// Stop Event Bubbling
@@ -154,6 +154,15 @@ class Combobox {
 		this.update_selected_in_view();
 	}
 
+	trigger_callback() {
+		this.on_change?.(this.current_value);
+	}
+
+	get_value() {
+		if(!this.current_value) return "Global";
+		return this.current_value;
+	}
+
 	update_selected_in_view() {
 		for (let item of this.list_items) {
 			const item_value = item.innerText;
@@ -163,12 +172,12 @@ class Combobox {
 				if(is_selected) {
 					item.classList.remove("selected");
 					item.querySelector("img")?.remove();
-					this.dropdown_button.querySelector("span").innerText = this.default_label;
+					this.button_label.innerText = this.default_label;
 					this.current_value = null;
 				} else {
 					if (!item.querySelector("img")) item.insertAdjacentHTML("beforeend", `<img src="/assets/stripes/images/icons/check.svg" alt="check">`);
 					item.classList.add("selected");
-					this.dropdown_button.querySelector("span").innerText = this.current_value;
+					this.button_label.innerText = this.current_value;
 				}
 			} else {
 				item.classList.remove("selected");
@@ -177,11 +186,10 @@ class Combobox {
 		}
 	}
 
-	default_selected_in_view () {
-		const default_item_selected = this.items.find(item => item.name === this.default_label);
-
-		if (default_item_selected) {
-			this.set_value(default_item_selected.name);
+	set_selected_item_onload() {
+		if(!this.current_value) {
+			const selected_item = this.items.find(item => this.button_label.innerText === item.name);
+			if(selected_item) this.set_value(selected_item.name);
 		}
 	}
 

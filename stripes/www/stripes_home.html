@@ -12,7 +12,7 @@
 {%- for name in metatags %}
 {%- set content = metatags.get(name, '') -%}
 {%- if name in ('image', 'og:image', 'twitter:image') %}
-	<meta {% if name.startswith('og:') %}property="{{ name }}"{% else %}name="{{ name }}"{% endif %} content="{{ content | striptags }}">
+	<meta {% if name.startswith('og:') %}property="{{ name }}"{% else %}name="{{ name }}"{% endif %} content="{{ content }}">
 {%- elif content %}
 	<meta {% if name.startswith('og:') %}property="{{ name }}"{% else %}name="{{ name }}"{% endif %} content="{{ content | striptags | escape }}">
 {%- endif %}
@@ -30,12 +30,23 @@
 			<div class="nav-bar-menu w-100" id="navbarSupportedContent">
 				<ul class="navbar-nav">
 					<li class="nav-item d-flex align-items-center">
-						<span class="mr-0 mr-md-3">Visualize</span>
+						<!-- VC Comparison Select Box -->
+						<div class="visualize-compare-select-box position-relative mr-0 mr-md-3">
+							<button class="btn-reset">
+								<span>{% if is_comparison_mode %}Compare{% else %}Visualize{% endif %}</span>
+								<img src="/assets/stripes/images/icons/arrow-down.svg" />
+							</button>
 
-						<!-- Global -->
+							<ul class="options-container">
+								<li class="option">Visualize</li>
+								<li class="option">Compare</li>
+							</ul>
+						</div>
+
+						<!-- Primary Combobox -->
 						<div class="dropdown">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-								<span data-label="Global">{{ selected_region }}</span>
+								<span data-default="Global">{{ selected_region }}</span>
 								<img src="/assets/stripes/images/icons/arrow-down.svg" />
 							</button>
 
@@ -45,7 +56,7 @@
 								<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
 									<li><button class="btn-reset tab-button active" id="region-tab" data-toggle="tab" data-target="#region">Region</button></li>
 									<li><button class="btn-reset tab-button" id="country-tab" data-toggle="tab" data-target="#country">Country</button></li>
-									<li><button class="btn-reset tab-button" id="region-tab" data-toggle="tab" data-target="#city">City</button></li>
+									<li><button class="btn-reset tab-button" id="city-tab" data-toggle="tab" data-target="#city">City</button></li>
 								</ul>
 
 								<!-- Nav Tabs Content -->
@@ -62,6 +73,7 @@
 											<ul class="list">
 												{% for region in monitor.region %}
 													<li>{{ region.name }}</li>
+													<li hidden>Global</li>
 												{% endfor %}
 											</ul>
 										</div>
@@ -105,6 +117,81 @@
 								</div>
 							</div>
 						</div>
+
+						<!-- Comparison Combobox -->
+						<div class="dropdown comparison ml-0 ml-md-3 {% if is_comparison_mode %}active{% endif %}">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								<span data-default="Global">{{ selected_compare_region }}</span>
+								<img src="/assets/stripes/images/icons/arrow-down.svg" />
+							</button>
+
+							<!-- DropDown Menu -->
+							<div class="dropdown-menu">
+								<!-- Nav Tabs -->
+								<ul class="nav nav-tabs" id="dropdown-tab" role="tablist">
+									<li><button class="btn-reset tab-button active" id="compare-region-tab" data-toggle="tab" data-target="#compare-region">Region</button></li>
+									<li><button class="btn-reset tab-button" id="compare-country-tab" data-toggle="tab" data-target="#compare-country">Country</button></li>
+									<li><button class="btn-reset tab-button" id="compare-city-tab" data-toggle="tab" data-target="#compare-city">City</button></li>
+								</ul>
+
+								<!-- Nav Tabs Content -->
+								<div class="tab-content" id="dropdown-tab-content">
+									<div class="tab-pane fade show active" id="compare-region">
+										<div class="compare-region">
+											<!-- Search -->
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											<ul class="list">
+												{% for region in monitor.region %}
+													<li>{{ region.name }}</li>
+													<li hidden>Global</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+
+									<!-- Country -->
+									<div class="tab-pane fade" id="compare-country">
+										<!-- Search -->
+										<div class="compare-country">
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											 <ul class="list">
+												{% for country in monitor.country %}
+													<li>{{ country.name }}</li>
+												{% endfor %}
+											 </ul>
+										</div>
+									</div>
+
+									<!-- City -->
+									<div class="tab-pane fade" id="compare-city">
+										<div class="compare-city">
+											<!-- Search -->
+											<div class="form-group d-flex align-item-center">
+												<img src="/assets/stripes/images/icons/search.svg" alt="search">
+												<input type="text" class="form-control search" placeholder="Search">
+											</div>
+
+											<!-- List -->
+											<ul class="list">
+												{% for city in monitor.city %}
+													<li>{{ city.name }}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</li>
 
 					<!-- Stripes -->
@@ -113,7 +200,7 @@
 
 						<div class="dropdown">
 							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" >
-								<span data-label="Stripes">Stripes</span>
+								<span data-default="Stripes">Stripes</span>
 								<img src="/assets/stripes/images/icons/arrow-down.svg" />
 							</button>
 
@@ -168,7 +255,7 @@
 						</a>
 
 						<!-- Share -->
-						<button class="btn btn-secondary" id="share-button" data-toggle="modal" data-target="#sharing-modal">
+						<button class="btn btn-secondary" data-toggle="modal" data-target="#sharing-modal">
 							<img src="/assets/stripes/images/icons/share.svg" alt="share-button">
 							<span>Share</span>
 						</button>
@@ -240,6 +327,7 @@
 		window.image_api = "{{ image_api|e }}";
 		window.stripes_from_date = "{{ from_date }}";
 		window.stripes_to_date = "{{ to_date }}";
+		window.is_comparison_mode = JSON.parse("{{ is_comparison_mode | tojson }}");
 
 		/* For Dropdown & Tabs */
 		$(document).ready(function() {
@@ -307,9 +395,9 @@
 
 		/* Stripes Share */
 		const update_sharing_url = () => {
+			const element = document.querySelectorAll(".social-icons-area a");
 			const share_text = encodeURIComponent("Check this out!");
 			const share_url = window.location.href;
-			const element = document.querySelectorAll(".social-icons-area a");
 			for (let d of element) {
 				social_site = d.getAttribute("data-share");
 
@@ -336,57 +424,81 @@
 		}
 
 		/* Download URL */
-		const update_stripes_download_url = (region) => {
+		const update_stripes_download_url = () => {
 			const download_el = document.getElementById("stripes-download-link");
-			let download_url = get_image_url(region);
+			let download_url = is_comparison_mode ? get_image_url(get_region(), get_compare_region()) :  get_image_url(get_region());
 			download_el.setAttribute("href", download_url);
 		}
 
-		const get_image_url = (region) => {
+		const get_image_url = (region, compare_region) => {
 			let download_url = `${image_api}?from_date=${stripes_from_date}&to_date=${stripes_to_date}`;
-			if (region) {
-				download_url += `&monitor_region=${encodeURIComponent(region)}`;
-			}
+			if (region) download_url += `&region=${encodeURIComponent(region)}`;
+			if (compare_region) download_url += `&compare_region=${encodeURIComponent(compare_region)}`;
 			return download_url;
 		}
 
 		// Update the URL based on filter selection.
-		const update_page_url = (value) => {
-			const new_url = value ? `/region/${encodeURIComponent(value)}` : `/`;
-			if (window.location.pathname !== new_url) {
-				window.history.pushState({ region: value }, null, new_url);
-			}
-		}
+		let previous_state = null;
+		const update_page_url = () => {
+			let new_url = null;
+			let region = get_region();
+			let compare_region = get_compare_region();
+			let should_update_history = false;
 
-		// Update the query on page reload.
-		window.addEventListener('load', (e) => {
-			const value = decodeURIComponent(window.location.pathname.split("/")[2]);
-			if (value) sync_region_comboboxes(value);
-		});
+			if (is_comparison_mode) {
+				if (!previous_state || previous_state.region !== region) {
+					should_update_history = true;
+				}
+				if (!previous_state || previous_state.compare_region !== compare_region) {
+					should_update_history = true;
+				}
 
-		// Retrieve and handle the state when the user navigates back in history.
-		window.addEventListener('popstate', (e) => {
-			if (e.state && e.state.region) {
-				fetch_stripes(e.state.region);
-				sync_region_comboboxes(e.state.region);
-			}
-		});
+				new_url = region || compare_region ? `/compare/${encodeURIComponent(region)}/${encodeURIComponent(compare_region)}`: "/";
 
-		/* Combobox Initializing */
-		const sync_region_comboboxes = (value, from) => {
-			if (country != from) {
-				country.set_value(value);
-			}
-			if (region != from) {
-				region.set_value(value);
-			}
-			if (city != from) {
-				city.set_value(value);
+				// Update history only if there's a unique state change
+				if (should_update_history && window.location.pathname !== new_url) {
+					window.history.pushState({ region: region, compare_region: compare_region }, null, new_url);
+					previous_state = { region, compare_region };
+				}
+			} else {
+				previous_state = null;
+				new_url = region ? `/region/${encodeURIComponent(region)}` : "/";
+				if (window.location.pathname !== new_url) window.history.pushState({region: region}, null, new_url);
 			}
 		};
 
+		// Retrieve and handle the state when the user navigates back in history.
+		window.addEventListener('popstate', (e) => {
+			let { region, compare_region } = e.state || {};
+
+			if (is_comparison_mode) {
+				if (region && region !== previous_state?.region) sync_region_comboboxes(region);
+				if (compare_region && compare_region !== previous_state?.compare_region) sync_compare_region_comboboxes(compare_region)
+				fetch_stripes(get_region(), get_compare_region());
+			} else {
+				fetch_region_stripes(get_region());
+				sync_region_comboboxes(region || "Global");
+			}
+
+			previous_state = e.state;
+		});
+
+		/* Primary Combobox Set Value */
+		const sync_region_comboboxes = (value, from) => {
+			if (country != from) country.set_value(value);
+			if (region != from) region.set_value(value);
+			if (city != from) city.set_value(value);
+		};
+
+		/* Comparison Combobox Set Value */
+		const sync_compare_region_comboboxes = (value, from) => {
+			if (compare_country != from) compare_country.set_value(value);
+			if (compare_region != from) compare_region.set_value(value);
+			if (compare_city != from) compare_city.set_value(value);
+		};
+
 		/* Fetching Stirpes */
-		const fetch_stripes = (value) => {
+		const fetch_stripes = (region, compare_region) => {
 			const stripes_container = document.querySelector(".stripes-container");
 			stripes_container?.classList.add("loading");
 
@@ -395,18 +507,19 @@
 				args: {
 					from_date: stripes_from_date,
 					to_date: stripes_to_date,
-					monitor_region: value
+					region: region,
+					compare_region: is_comparison_mode ? compare_region : null
 				},
 				callback: (response) => {
 					if (response.message) {
-						document.querySelector(".stripes-container .stripes").innerHTML = response.message;
+						stripes_container.querySelector(".stripes").innerHTML = response.message;
 					}
 					stripes_container?.classList.remove("loading");
 
-					update_stripes_download_url(value);
-					update_page_url(value);
-					update_sharing_url();
 					initialize_popover();
+					update_page_url();
+					update_stripes_download_url();
+					update_sharing_url();
 				},
 				error: (error) => {
 					frappe.msgprint({
@@ -417,27 +530,62 @@
 			});
 		}
 
-		/* Global Combobox */
-		const country = new Combobox(".country",
-			(value) => {sync_region_comboboxes(value, country), fetch_stripes(value)}
-		);
+		const fetch_region_stripes = (region, compare_region) => fetch_stripes(region, compare_region);
+		const fetch_compare_stripes = (region, compare_region) => fetch_stripes(compare_region, region);
 
-		const region = new Combobox(".region",
-			(value) => {sync_region_comboboxes(value, region), fetch_stripes(value)}
-		);
+		/* Primary Combobox Initializing */
+		const region = new Combobox(".region", (value) => {
+			sync_region_comboboxes(value, region);
+			get_region();
+			fetch_region_stripes(value, get_compare_region());
+		});
 
-		const city = new Combobox(".city",
-			(value) => {sync_region_comboboxes(value, city), fetch_stripes(value)}
-		);
+		const country = new Combobox(".country", (value) => {
+			sync_region_comboboxes(value, country);
+			get_region();
+			fetch_region_stripes(value, get_compare_region());
+		});
+
+		const city = new Combobox(".city", (value) => {
+			sync_region_comboboxes(value, city);
+			get_region();
+			fetch_region_stripes(value, get_compare_region());
+		});
+
+		/* Comparison Combobox Initializing */
+		const compare_region = new Combobox(".compare-region", (value) => {
+			sync_compare_region_comboboxes(value, compare_region);
+			get_compare_region();
+			fetch_compare_stripes(value || "Global", get_region());
+		});
+
+		const compare_country = new Combobox(".compare-country", (value) => {
+			sync_compare_region_comboboxes(value, compare_country);
+			get_compare_region();
+			fetch_compare_stripes(value || "Global", get_region());
+		});
+
+		const compare_city = new Combobox(".compare-city", (value) => {
+			sync_compare_region_comboboxes(value, compare_city);
+			get_compare_region();
+			fetch_compare_stripes(value || "Global", get_region());
+		});
+
+		const get_region = () => region.get_value() || country.get_value() || city.get_value() || null;
+		const get_compare_region = () => compare_region.get_value() || compare_country.get_value() || compare_city.get_value() || null;
 
 		/* Stripes Combobox */
 		const stripe = new Combobox(".stripe");
 
+		/* First time call */
+		initialize_popover();
+		update_sharing_url();
+
 		/* Copy Clipboard */
-		const share_button = document.getElementById("share-button");
-		share_button.onclick = () => {
-			document.querySelector(".contain-url").value = window.location.href;
-		};
+		const share_button = document.querySelectorAll('[data-target="#sharing-modal"]');
+		for (let el of share_button) {
+			el.onclick = () => document.querySelector(".contain-url").value = window.location.href;
+		}
 
 		const copy_icon = document.querySelector(".copy-icon");
 		const clipboard = new ClipboardJS('.copy-icon');
@@ -450,8 +598,38 @@
 			}, 2000);
 		});
 
-		/* First time call */
-		initialize_popover();
-		update_sharing_url();
+		/* Visualize & Compare Select Box */
+		const visualize_compare = document.querySelector(".visualize-compare-select-box");
+		const visualize_compare_button = visualize_compare.querySelector("button");
+		const options = visualize_compare.querySelectorAll(".option");
+		const visualize_compare_button_label = visualize_compare.querySelector("span");
+		const compare_classes = document.querySelectorAll(".comparison");
+
+		visualize_compare_button.addEventListener("click", () => {
+			visualize_compare.classList.toggle("active");
+
+			for (let option of options) {
+				let value_existence = visualize_compare_button.innerText == option.innerText;
+				value_existence ? option.style.display = "none" : option.style.display = "block";
+			}
+		});
+
+		for (let option of options) {
+			option.addEventListener("click", () => {
+				let selected_option = option.innerText;
+				visualize_compare_button_label.innerText = selected_option;
+				visualize_compare.classList.remove("active");
+
+				if (visualize_compare_button_label.innerText === "Compare") {
+					is_comparison_mode = true;
+					compare_classes.forEach((compare) => compare.classList.add("active"));
+					fetch_stripes(get_region(), get_compare_region());
+				} else {
+					is_comparison_mode = false;
+					compare_classes.forEach((compare) => compare.classList.remove("active"));
+					fetch_region_stripes(get_region());
+				}
+			});
+		}
 	</script>
 {% endblock %}

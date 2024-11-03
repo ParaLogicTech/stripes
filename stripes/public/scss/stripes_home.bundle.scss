@@ -164,8 +164,6 @@ footer {
 	border-top: 1px solid #eaecf0;
 
 	@include media-breakpoint-down (sm) {
-		position: absolute;
-		bottom: 0;
 		padding: 12px;
 	}
 

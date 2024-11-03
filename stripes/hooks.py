@@ -22,4 +22,8 @@ website_route_rules = [
 		"from_route": "/region/<path:region>",
 		"to_route": " stripes_home"
 	},
+	{
+		"from_route": "/compare/<path:region>/<path:compare_region>",
+		"to_route": "stripes_home"
+	},
 ]
